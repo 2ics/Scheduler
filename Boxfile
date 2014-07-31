@@ -1,6 +1,6 @@
 build:
   exec:
-    - "composer install --no-interaction --prefer-dist"
+    - "composer install --prefer-source"
   lib_dir: vendor
   reuse_libs: true
 web1:
