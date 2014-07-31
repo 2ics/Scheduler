@@ -2,6 +2,8 @@
 if (isset($_SERVER['HTTP_HOST'])){
 	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost:8888"){
 		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/timemanagement/public";
+	}else{
+		$_SERVER['HTTP_HOST'] = "http://schedule.gopagoda.io";
 	}
 }
 return array(
