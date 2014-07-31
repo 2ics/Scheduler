@@ -33,7 +33,7 @@ $cfg['Servers'][$i]['connect_type'] = 'tcp';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['user'] = 'jonie';
 $cfg['Servers'][$i]['password'] = 'ATg1HxbE';
-$cfg['Servers'][$i]['AllowNoPassword'] = false;
+$cfg['Servers'][$i]['AllowNoPassword'] = true;
 
 /*
  * phpMyAdmin configuration storage settings.
