@@ -1,5 +1,18 @@
 <?php
 
+if (!isset($_SERVER['DATABASE1_HOST'])){
+	$_SERVER['DATABASE1_HOST'] = "localhost";
+}
+if (!isset($_SERVER['DATABASE1_NAME'])){
+	$_SERVER['DATABASE1_NAME'] = "timemanagement";
+}
+if (!isset($_SERVER['DATABASE1_USER'])){
+	$_SERVER['DATABASE1_USER'] = "root";
+}
+if (!isset($_SERVER['DATABASE1_PASS'])){
+	$_SERVER['DATABASE1_PASS'] = "admin";
+}
+
 return array(
 
 	/*
@@ -54,10 +67,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => DB_HOST,
-			'database'  => DB_NAME,
-			'username'  => DB_USER,
-			'password'  => DB_PASS,
+			'host'      => $_SERVER['DATABASE1_HOST'],
+			'database'  => $_SERVER['DATABASE1_NAME'],
+			'username'  => $_SERVER['DATABASE1_USER'],
+			'password'  => $_SERVER['DATABASE1_PASS'],
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

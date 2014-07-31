@@ -1,13 +1,20 @@
 {
 	"require": {
 		"laravel/framework": "4.1.*",
-		"cartalyst/sentry": "~2.1"
+		"cartalyst/sentry": "~2.1",
+		"stolz/assets": "dev-master"
 	},
 	"require-dev": {
 		"way/generators": "~2.6",
 		"mockery/mockery": "~0.9",
 		"phpunit/phpunit": "~4.0"
 	},
+	"repositories": [
+    {
+        "type":"vcs",
+        "url": "https://github.com/SeanBuller/Assets"
+    }
+	],
 	"autoload": {
 		"classmap": [
 			"app/commands",
@@ -24,5 +31,5 @@
 	"scripts": {
 		"post-update-cmd": "php artisan optimize"
 	},
-	"minimum-stability": "stable"
+	"minimum-stability": "dev"
 }
