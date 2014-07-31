@@ -1,4 +1,5 @@
 <?php
+
 if (isset($_SERVER['HTTP_HOST'])){
 	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost:8888"){
 		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/timemanagement/public";
@@ -6,6 +7,7 @@ if (isset($_SERVER['HTTP_HOST'])){
 		$_SERVER['HTTP_HOST'] = "http://".$_SERVER['HTTP_HOST'];
 	}
 }
+
 return array(
 
 	/*
