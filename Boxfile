@@ -23,6 +23,7 @@ web1:
     - app/storage/meta
     - app/storage/sessions
     - app/storage/views
+    - public/min
 cache1:
   type: redis
 database1:
