@@ -1,5 +1,16 @@
 <?php
-
+if (!defined('DB_HOST')) {
+	(isset($_SERVER['DATABASE1_HOST'])) ? define('DB_HOST', $_SERVER['DATABASE1_HOST']) : define('DB_HOST', $_ENV['DATABASE1_HOST']);
+}
+if (!defined('DB_NAME')) {
+	(isset($_SERVER['DATABASE1_NAME'])) ? define('DB_NAME', $_SERVER['DATABASE1_NAME']) : define('DB_NAME', $_ENV['DATABASE1_NAME']);
+}
+if (!defined('DB_USER')) {
+	(isset($_SERVER['DATABASE1_USER'])) ? define('DB_USER', $_SERVER['DATABASE1_USER']) : define('DB_USER', $_ENV['DATABASE1_USER']);
+}
+if (!defined('DB_PASS')) {
+	(isset($_SERVER['DATABASE1_PASS'])) ? define('DB_PASS', $_SERVER['DATABASE1_PASS']) : define('DB_PASS', $_ENV['DATABASE1_PASS']);
+}
 return array(
 
 	/*
