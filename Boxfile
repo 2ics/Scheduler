@@ -17,6 +17,12 @@ web1:
     - xcache
   php_session_save_handler: redis
   php_session_save_path: "tcp://tunnel.pagodabox.com:11211"
+  shared_writable_dirs:
+    - app/storage/cache
+    - app/storage/logs
+    - app/storage/meta
+    - app/storage/sessions
+    - app/storage/views
 cache1:
   type: redis
 database1:
