@@ -190,6 +190,7 @@
 @section('javascript')
 <script>
 $(document).ready( function () {
+	
   $.fn.editable.defaults.mode = 'popup';
 	$('#myModal').on('shown.bs.modal', function (e) {
 
