@@ -6,6 +6,7 @@ if (isset($_SERVER['HTTP_HOST'])){
 		$_SERVER['HTTP_HOST'] = "http://".$_SERVER['HTTP_HOST'];
 	}
 }
+
 return array(
 
 	/*
