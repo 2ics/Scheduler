@@ -1,0 +1,28 @@
+{
+	"require": {
+		"laravel/framework": "4.1.*",
+		"cartalyst/sentry": "~2.1"
+	},
+	"require-dev": {
+		"way/generators": "~2.6",
+		"mockery/mockery": "~0.9",
+		"phpunit/phpunit": "~4.0"
+	},
+	"autoload": {
+		"classmap": [
+			"app/commands",
+			"app/controllers",
+			"app/models",
+			"app/database/migrations",
+			"app/database/seeds",
+			"app/tests/TestCase.php"
+		],
+		"psr-0": {
+			"Authority": "app/"
+		}
+	},
+	"scripts": {
+		"post-update-cmd": "php artisan optimize"
+	},
+	"minimum-stability": "stable"
+}
