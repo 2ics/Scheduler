@@ -28,11 +28,10 @@
 		</div>
 	</div>
 @endif 
- 
+
 @stop
 
 
 @section('javascript')
-
 
 @stop

@@ -2,6 +2,7 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"cartalyst/sentry": "~2.1",
+		"venturecraft/revisionable": "1.*",
 		"stolz/assets": "dev-master"
 	},
 	"require-dev": {

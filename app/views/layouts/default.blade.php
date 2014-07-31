@@ -80,6 +80,9 @@
 		<?php echo Assets::js();?>
 
 
+		<script type="text/javascript">
+			var root = '{{url("/")}}';
+		</script>
 		<!-- Content -->
 		@yield('javascript')
 		<!-- ./ content -->
