@@ -15,4 +15,31 @@ class BaseController extends Controller {
 		}
 	}
 
+
+    protected function checkPermissions($access, $userId = [])
+    {
+        $action = explode('@', Route::currentRouteAction())[1];
+        if (Sentry::check())
+        {
+            if (isset($this->access[$action]) && $this->access[$action] != null)
+            {
+                foreach ($this->access[$action] as $group)
+                {
+                    if ($group == "Me" && (Route::input('users') == Session::get('userId') || Route::input('id') == Session::get('userId')))
+                    {
+                        return;
+                    }
+                    if (Sentry::getUser()->hasAccess($group))
+                    {
+                        return;
+                    }
+                }
+                Session::flash('error', "You are not allowed to do this.");
+                $this->beforeFilter('redirect:home');
+            }
+        } else
+        {
+            $this->beforeFilter('redirect:login');
+        }
+    }
 }
