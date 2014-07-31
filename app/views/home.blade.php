@@ -23,10 +23,16 @@
 		</div>
 		<div class="panel-body">
 			<p><strong>{{trans('pages.sessiondata')}}:</strong></p>
+
 			<pre>{{ var_dump(Session::all()) }}</pre>
 		</div>
 	</div>
 @endif 
  
- 
+@stop
+
+
+@section('javascript')
+
+
 @stop

@@ -78,5 +78,10 @@
 		<!-- Javascripts
 		================================================== -->
 		<?php echo Assets::js();?>
+
+
+		<!-- Content -->
+		@yield('javascript')
+		<!-- ./ content -->
 	</body>
 </html>
