@@ -280,14 +280,6 @@ $(document).ready( function () {
 function activate_editables() {
 	$('.docket').editable({
 		title: 'Enter Docket Number',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -302,14 +294,6 @@ function activate_editables() {
     });
 	$('.customer').editable({
 		title: 'Enter Customer Name',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -326,14 +310,6 @@ function activate_editables() {
 		title: 'Enter Description',
 		'type':'textarea',
 		'placement': 'right',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -348,14 +324,6 @@ function activate_editables() {
     });
 	$('.press').editable({
 		title: 'Enter Press',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -370,14 +338,6 @@ function activate_editables() {
     });
 	$('.sheets').editable({
 		title: 'Enter Sheet Count',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -402,7 +362,6 @@ function activate_editables() {
 		},
 	    'type':'combodate',
 	    'placement': 'right',
-	    'value':'2014-05-15',
 	    success: function(response, newValue) {
 	    	console.log(newValue.unix());
 	        $.ajax({
@@ -417,14 +376,7 @@ function activate_editables() {
 	    }
  	});
 	$('.notes').editable({title: 'Enter Note', 'type':'textarea', 'placement': 'right',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
+
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -438,14 +390,6 @@ function activate_editables() {
         }
     });
 	$('.sheets').editable({title: 'Enter Duration',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -459,14 +403,6 @@ function activate_editables() {
         }
     });
 	$('.status').editable({title: 'Enter Status',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -480,14 +416,6 @@ function activate_editables() {
         }
     });
 	$('.rep').editable({title: 'Enter Representative',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -501,14 +429,6 @@ function activate_editables() {
         }
     });
 	$('.colour').editable({title: 'Enter Colour',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -522,14 +442,6 @@ function activate_editables() {
         }
     });
 	$('.duration').editable({title: 'Enter Duration',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -543,14 +455,6 @@ function activate_editables() {
         }
     });
 	$('.stock').editable({title: 'Enter Stock', 'type':'textarea', 'placement': 'left',
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'This field is required';
-            }
-            if(!$.isNumeric($.trim(value))){
-                return 'This field must be a number';
-            }
-        },
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
