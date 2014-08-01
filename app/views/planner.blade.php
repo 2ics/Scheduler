@@ -109,7 +109,7 @@
 				    <div class="form-group">
 				        <label class="col-lg-3 control-label">Due Date</label>
 				        <div class="col-lg-5">
-				            <input type="text" class="form-control" name="due_date" placeholder="100" />
+				            <input type="text" id="date" data-customClass="form-control" data-smartDays="true" data-format="DD-MM-YYYY" data-template="D MMM YYYY" name="due_date" value="09-01-2013">
 				        </div>
 				    </div>
 
@@ -194,6 +194,10 @@ $(document).ready( function () {
   $.fn.editable.defaults.mode = 'popup';
 	$('#myModal').on('shown.bs.modal', function (e) {
 		t.ajax.reload();
+		$('#date').combodate({
+			smartDays: true,
+			customClass: "form-control"
+		});    
 		$('#attributeForm').bootstrapValidator({
         submitHandler: function(form) {
             $.ajax({

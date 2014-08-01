@@ -3942,9 +3942,8 @@ $(function(){
     $.fn.editabletypes.select2 = Constructor;
 
 }(window.jQuery));
-
 /**
-* Combodate - 1.0.5
+* Combodate - 1.0.7
 * Dropdown date and time picker.
 * Converts text input into dropdowns to pick day, month, year, hour, minute and second.
 * Uses momentjs as datetime library http://momentjs.com.
@@ -3991,7 +3990,6 @@ $(function(){
             };
             
             this.$widget = $('<span class="combodate"></span>').html(this.getTemplate());
-                      
             this.initCombos();
             
             //update original input on change 
@@ -4019,6 +4017,7 @@ $(function(){
         */         
         getTemplate: function() {
             var tpl = this.options.template;
+            var customClass = this.options.customClass;
 
             //first pass
             $.each(this.map, function(k, v) {
@@ -4037,7 +4036,7 @@ $(function(){
                 v = v[0];
                 var token = v.length > 1 ? v.substring(1, 2) : v;
                     
-                tpl = tpl.replace('{'+token+'}', '<select class="'+k+'"></select>');
+                tpl = tpl.replace('{'+token+'}', '<select class="'+k+' '+customClass+'"></select>');
             });   
 
             return tpl;
@@ -4284,7 +4283,8 @@ $(function(){
                 return;
             }
             
-            var dt = typeof value === 'string' ? moment(value, this.options.format) : moment(value),
+            // parse in strict mode (third param `true`)
+            var dt = typeof value === 'string' ? moment(value, this.options.format, true) : moment(value),
                 that = this,
                 values = {};
             
@@ -4424,6 +4424,7 @@ $(function(){
         secondStep: 1,
         firstItem: 'empty', //'name', 'empty', 'none'
         errorClass: null,
+        customClass: '',
         roundTime: true, // whether to round minutes and seconds if step > 1
         smartDays: false // whether days in combo depend on selected month: 31, 30, 28
     };
