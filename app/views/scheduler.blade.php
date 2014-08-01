@@ -9,6 +9,7 @@
 {{-- Content --}}
 @section('content')
 <div class="row">
+	SCHEDULER
   <div class="col-md-3">
 	<div class="panel-group">
         <div class="panel panel-default">
