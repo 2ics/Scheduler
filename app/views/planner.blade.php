@@ -189,31 +189,30 @@
 {{-- Javascript --}}
 @section('javascript')
 <script>
+var t = null;
 $(document).ready( function () {
   $.fn.editable.defaults.mode = 'popup';
 	$('#myModal').on('shown.bs.modal', function (e) {
-
-				        	t.ajax.reload();
+		t.ajax.reload();
 		$('#attributeForm').bootstrapValidator({
         submitHandler: function(form) {
-            console.log("SUCCES");
             $.ajax({
-				        url: root+'/api/tasks/add',
-				        type: 'POST',
-				        dataType: 'text',
-				        data: $("#attributeForm").serializeArray(),
-				        success: function(data) {
-				        	$('#myModal').modal('hide');
-				        	t.ajax.reload();
-				        }
-				    });
+		        url: root+'/api/tasks/add',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: $("#attributeForm").serializeArray(),
+		        success: function(data) {
+		        	$('#myModal').modal('hide');
+		        	t.ajax.reload();
+		        }
+		    });
         }
      });
 		$('.selectpicker').selectpicker();
 	});
-  var t = $('#table_id').DataTable( {
+    t = $('#table_id').DataTable( {
       "dom": 'TCR<"clear">lfrtip',
-  		"pageLength": 10,
+	  "pageLength": 10,
       "ajax": { 
       	'url': root+"/api/tasks/get"
     	},
@@ -269,19 +268,128 @@ $(document).ready( function () {
       },
       "drawCallback": function () {
         activate_editables();
+      },
+      "oColReorder": {
+  		"reorderCallback": function () {
+        	activate_editables();
+        }
       }
   } );
 } );
 
 function activate_editables() {
-	$('.docket').editable({title: 'Enter Docket Number', url: root+'/api/tasks/editcolumn',
-    ajaxOptions: {
-        type: 'put'
-    }  });
-	$('.customer').editable({title: 'Enter Customer Name'});
-	$('.description').editable({title: 'Enter Description', 'type':'textarea', 'placement': 'right'});
-	$('.press').editable({title: 'Enter Press'});
-	$('.sheets').editable({title: 'Enter Sheet Count'});
+	$('.docket').editable({
+		title: 'Enter Docket Number',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'docket', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.customer').editable({
+		title: 'Enter Customer Name',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'customer', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.description').editable({
+		title: 'Enter Description',
+		'type':'textarea',
+		'placement': 'right',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'description', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.press').editable({
+		title: 'Enter Press',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'press', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.sheets').editable({
+		title: 'Enter Sheet Count',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'sheets', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
 	$('.due_date').editable({
 		title: 'Enter Due Date',
 		format: 'YYYY-MM-DD',
@@ -292,17 +400,169 @@ function activate_editables() {
 		  maxYear: 2015,
 		  minuteStep: 1
 		},
-    'type':'combodate',
-    'placement': 'right',
-    'value':'2014-05-15'
-  });
-	$('.notes').editable({title: 'Enter Note', 'type':'textarea', 'placement': 'right'});
-	$('.sheets').editable({title: 'Enter Duration'});
-	$('.status').editable({title: 'Enter Status'});
-	$('.rep').editable({title: 'Enter Representative'});
-	$('.colour').editable({title: 'Enter Colour'});
-	$('.duration').editable({title: 'Enter Duration'});
-	$('.stock').editable({title: 'Enter Stock', 'type':'textarea', 'placement': 'left'});
+	    'type':'combodate',
+	    'placement': 'right',
+	    'value':'2014-05-15',
+	    success: function(response, newValue) {
+	    	console.log(newValue.unix());
+	        $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'due_date', value: newValue.unix()},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+	    }
+ 	});
+	$('.notes').editable({title: 'Enter Note', 'type':'textarea', 'placement': 'right',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'notes', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.sheets').editable({title: 'Enter Duration',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'sheets', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.status').editable({title: 'Enter Status',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'status', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.rep').editable({title: 'Enter Representative',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'rep', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.colour').editable({title: 'Enter Colour',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'colour', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.duration').editable({title: 'Enter Duration',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'duration', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.stock').editable({title: 'Enter Stock', 'type':'textarea', 'placement': 'left',
+        validate: function(value) {
+            if($.trim(value) == '') {
+                return 'This field is required';
+            }
+            if(!$.isNumeric($.trim(value))){
+                return 'This field must be a number';
+            }
+        },
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'stock', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
 }
 
 </script>

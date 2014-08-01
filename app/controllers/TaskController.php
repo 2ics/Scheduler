@@ -13,7 +13,11 @@ class TaskController extends \BaseController {
 			$counter = 0;
 		foreach ($tasks as $task){
 			foreach ($task['attributes'] as $index => $attribute){
-				$allTasks[$counter][$index] = "<div class='".$index."'>".$attribute."</div>";
+				if ($index == "due_date"){
+					$allTasks[$counter][$index] = "<div class='".$index."'>".date('d/m/Y', intval($attribute))."</div>";
+				}else{
+					$allTasks[$counter][$index] = "<div class='".$index."'>".$attribute."</div>";
+				}
 			}
 			$counter++;
 		}
@@ -48,11 +52,15 @@ class TaskController extends \BaseController {
 	 */
 	public function editColumn()
 	{
-        // if (Request::ajax()) {
+        if (Request::ajax()) {
             $data = Input::all();
 
-           	Log::info($data);
-        // }
+            $task = Task::find($data['id']);
+
+            $task[$data['field']] = $data['value'];
+
+            $task->save();
+        }
 	}
 
 }
