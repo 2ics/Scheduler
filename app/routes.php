@@ -56,6 +56,7 @@ Route::get('/', array('as' => 'home', function()
 Route::get('planner', 'HomeController@planner');
 Route::get('api/tasks/get', 'TaskController@getTasks');
 Route::post('api/tasks/add', 'TaskController@addTask');
+Route::post('api/tasks/editcolumn', 'TaskController@editColumn');
 // App::missing(function($exception)
 // {
 //     App::abort(404, 'Page not found');

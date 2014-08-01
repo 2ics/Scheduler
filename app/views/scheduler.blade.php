@@ -274,10 +274,7 @@ $(document).ready( function () {
 } );
 
 function activate_editables() {
-	$('.docket').editable({title: 'Enter Docket Number', url: root+'/api/tasks/editcolumn',
-    ajaxOptions: {
-        type: 'put'
-    }  });
+	$('.docket').editable({title: 'Enter Docket Number', url: root+'/api/tasks/editcolumn'});
 	$('.customer').editable({title: 'Enter Customer Name'});
 	$('.description').editable({title: 'Enter Description', 'type':'textarea', 'placement': 'right'});
 	$('.press').editable({title: 'Enter Press'});

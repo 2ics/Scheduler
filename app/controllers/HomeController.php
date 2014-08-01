@@ -25,4 +25,9 @@ class HomeController extends BaseController {
 		return View::make('planner');
 	}
 
+	public function scheduler()
+	{
+		return View::make('scheduler');
+	}
+
 }

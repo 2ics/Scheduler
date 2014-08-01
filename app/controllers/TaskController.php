@@ -41,5 +41,18 @@ class TaskController extends \BaseController {
            	$task->save();
         }
 	}
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function editColumn()
+	{
+        // if (Request::ajax()) {
+            $data = Input::all();
+
+           	Log::info($data);
+        // }
+	}
 
 }
