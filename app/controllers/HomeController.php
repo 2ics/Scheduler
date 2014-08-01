@@ -26,7 +26,8 @@ class HomeController extends BaseController {
 	}
 
 	public function scheduler()
-	{
+	{		
+		Assets::add('scheduler'); 
 		return View::make('scheduler');
 	}
 

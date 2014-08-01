@@ -10,9 +10,8 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
-
-Assets::add('main'); 
+	
+Assets::add('planner'); 
 
 // Session Routes
 Route::get('login',  array('as' => 'login', 'uses' => 'SessionController@create'));
