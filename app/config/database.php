@@ -12,6 +12,7 @@ if (!isset($_SERVER['DATABASE1_USER'])){
 if (!isset($_SERVER['DATABASE1_PASS'])){
 	$_SERVER['DATABASE1_PASS'] = "admin";
 }
+
 return array(
 
 	/*
