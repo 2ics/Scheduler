@@ -54,6 +54,7 @@ Route::get('/', array('as' => 'home', function()
 
 
 Route::get('planner', 'HomeController@planner');
+Route::get('scheduler', 'HomeController@scheduler');
 Route::get('api/tasks/get', 'TaskController@getTasks');
 Route::post('api/tasks/add', 'TaskController@addTask');
 Route::post('api/tasks/editcolumn', 'TaskController@editColumn');

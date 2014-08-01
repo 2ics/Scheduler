@@ -106,7 +106,7 @@
 				        </div>
 				    </div>
 
-				    <div class="form-group">
+				    <div class="form-group form-inline">
 				        <label class="col-lg-3 control-label">Due Date</label>
 				        <div class="col-lg-5">
 				            <input type="text" id="date" data-customClass="form-control" data-smartDays="true" data-format="DD-MM-YYYY" data-template="D MMM YYYY" name="due_date" value="09-01-2013">
