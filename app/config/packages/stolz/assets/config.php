@@ -4,7 +4,7 @@ if (isset($_SERVER['HTTP_HOST'])){
 	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost:8888"){
 		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/timemanagement/public";
 	}else{
-		$_SERVER['HTTP_HOST'] = "http://schedule.gopagoda.io";
+		$_SERVER['HTTP_HOST'] = "http://localhost:8888/timemanagement/public";
 	}
 }
 if (isset($_SERVER['HTTP_HOST'])){
@@ -135,6 +135,7 @@ return array(
 		                'packages/calendar/skins/gcalendar.css',
 		                'packages/font-awesome-4.1.0 2/css/font-awesome.min.css',
 						'packages/calendar/libs/jquery-1.4.4.min.js',
+		                'javascripts/main/jquery.actual.min.js',
 		                'javascripts/main/bootstrap.min.js',
 		                'packages/calendar/libs/jquery-ui-1.8.11.custom.min.js',
 		                'packages/calendar/libs/jquery-ui-i18n.js',
@@ -142,7 +143,6 @@ return array(
 		                'packages/calendar/jquery.calendar.js',
 		                'javascripts/main/restfulizer.js',
 		                'javascripts/main/dropzone.js',
-		                'javascripts/main/jquery.actual.min.js',
 		                'javascripts/main/bootstrapValidator.js',
 		                'javascripts/main/chosen.jquery.min.js',
 		                'javascripts/main/knockout-min.js',

@@ -65,7 +65,7 @@
         },
         switchDisplay: {},
         scrollToHourMillis: 500,
-        allowEventDelete: false,
+        allowEventDelete: true,
         allowCalEventOverlap: false,
         overlapEventsSeparate: false,
         totalEventsWidthPercentInOneColumn: 100,
@@ -94,6 +94,7 @@
           return element;
         },
         eventDrag: function(calEvent, element) {
+          console.log(calEvent);
         },
         eventDrop: function(calEvent, element) {
         },
@@ -514,6 +515,9 @@
       },
       getCurrentLastDay: function() {
         return this._addDays(this.getCurrentFirstDay(), this.options.daysToShow - 1);
+      },
+      getUsers: function() {
+        return this.options.users;
       },
 
       /*********************
@@ -1070,6 +1074,7 @@
       _setupEventCreationForWeekDay: function($weekDay) {
           var self = this;
           var options = this.options;
+
           $weekDay.mousedown(function(event) {
             var $target = $(event.target);
             if ($target.hasClass('wc-day-column-inner')) {
@@ -1785,14 +1790,14 @@
        */
       _addDraggableToCalEvent: function(calEvent, $calEvent) {
         var options = this.options;
-
         $calEvent.draggable({
           handle: '.wc-time',
-          containment: 'div.wc-time-slots',
+          containment: 'div.wc-user-'+calEvent.userId,
+          // containment: 'div.wc-time-slots',
           snap: '.wc-day-column-inner',
           snapMode: 'inner',
           snapTolerance: options.timeslotHeight - 1,
-          revert: 'invalid',
+          revert: 'valid',
           opacity: 0.5,
           grid: [$calEvent.outerWidth() + 1, options.timeslotHeight],
           start: function(event, ui) {
@@ -1813,6 +1818,7 @@
             drop: function(event, ui) {
                 var $calEvent = ui.draggable;
                 var top = Math.round(parseInt(ui.position.top));
+
                 var eventDuration = self._getEventDurationFromPositionedEventElement($weekDay, $calEvent, top);
                 var calEvent = $calEvent.data('calEvent');
                 var newCalEvent = $.extend(true, {}, calEvent, {start: eventDuration.start, end: eventDuration.end});
