@@ -49,6 +49,10 @@
 				@endif
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">
+				<li {{ (Request::is('planner') ? 'class="active"' : '') }}><a href="{{ URL::to('planner') }}">{{trans('pages.planner')}}</a></li>
+				
+				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ URL::to('scheduler') }}">{{trans('pages.scheduler')}}</a></li>
+				
 	            @if (Sentry::check())
 				<li {{ (Request::is('users/show/' . Session::get('userId')) ? 'class="active"' : '') }}><a href="{{ URL::to('users') }}/{{ Session::get('userId') }}">{{ Session::get('email') }}</a></li>
 				<li><a href="{{ URL::to('logout') }}">{{trans('pages.logout')}}</a></li>

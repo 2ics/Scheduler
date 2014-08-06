@@ -54,9 +54,17 @@ Route::get('/', array('as' => 'home', function()
 
 Route::get('planner', 'HomeController@planner');
 Route::get('scheduler', 'HomeController@scheduler');
+Route::get('process/{name}', 'HomeController@scheduleProcess');
 Route::get('api/tasks/get', 'TaskController@getTasks');
 Route::post('api/tasks/add', 'TaskController@addTask');
+Route::post('api/tasks/save/event', 'TaskController@saveEvent');
 Route::post('api/tasks/editcolumn', 'TaskController@editColumn');
+Route::post('api/tasks/bydate', 'TaskController@byDate');
+Route::get('api/tasks/getbydate/{start}/{end}', 'TaskController@getByDate');
+Route::get('api/tasks/unscheduledtasks', 'TaskController@getUnscheduledTasks');
+Route::get('api/tasks/process/{id}/equipment', 'TaskController@getProcessEquipment');
+Route::get('api/tasks/process/equipment/order/{id}', 'TaskController@getEquipmentOrderId');
+Route::get('api/tasks/process/all', 'TaskController@allProcesses');
 // App::missing(function($exception)
 // {
 //     App::abort(404, 'Page not found');

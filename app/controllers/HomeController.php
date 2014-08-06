@@ -27,8 +27,16 @@ class HomeController extends BaseController {
 
 	public function scheduler()
 	{		
+		Assets::add('scheduler');
+		return View::make('scheduler')->with(array('processes' => Process::all()));
+	}
+
+	public function scheduleProcess($process_name)
+	{		
 		Assets::add('scheduler'); 
-		return View::make('scheduler');
+
+		$process = Process::where('name', '=', $process_name)->first();
+		return View::make('process_schedule')->with(array('process_id' => $process->id));
 	}
 
 }

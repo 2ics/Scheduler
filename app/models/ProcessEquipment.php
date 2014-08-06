@@ -1,16 +1,16 @@
 <?php
 
-class Task extends Eloquent {
+class ProcessEquipment extends Eloquent {
     // use \Venturecraft\Revisionable\RevisionableTrait;
 
 	// protected $revisionEnabled = true;
 
-    protected $table = 'tasks';
+    protected $table = 'equipment';
 	
 	protected $softDelete = true;
-	
-    public function equipment()
+
+    public function process()
     {
-        return $this->hasOne('ProcessEquipment');
+        return $this->hasOne('Process');
     }
 }

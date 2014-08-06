@@ -64,11 +64,11 @@ return array(
 
 	'actiondelete'	=> "Delete",
 
-	''	=> "",
+	'name'			=> "Flash Scheduling",
 
-	''	=> "",
+	'planner'		=> "Planner",
 
-	''	=> "",
+	'scheduler'		=> "Scheduler",
 
 	''	=> "",
 

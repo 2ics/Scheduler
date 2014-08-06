@@ -71,7 +71,7 @@
         totalEventsWidthPercentInOneColumn: 100,
         readonly: false,
         allowEventCreation: true,
-        hourLine: false,
+        hourLine: true,
         deletable: function(calEvent, element) {
           return true;
         },
@@ -94,7 +94,6 @@
           return element;
         },
         eventDrag: function(calEvent, element) {
-          console.log(calEvent);
         },
         eventDrop: function(calEvent, element) {
         },
@@ -313,6 +312,30 @@
       refresh: function() {
         //reload with existing week
         this._loadCalEvents(this.element.data('startDate'));
+      },
+
+      save: function() {
+        //reload with existing week
+        // var self = this;
+        // var tasks = Array();
+        // self.element.find('.wc-cal-event').each(function() {
+        //   tasks[$(this).data('calEvent').id] = $(this).data('calEvent');
+        //   console.log(tasks[$(this).data('calEvent').id].start);
+        //   // tasks[$(this).data('calEvent').id]['start'] = tasks[$(this).data('calEvent').id].start.getTime();
+        //   // tasks[$(this).data('calEvent').id].end = tasks[$(this).data('calEvent').id].end.getTime();
+        // });
+        // console.log(tasks);
+      },
+
+      saveEvent: function(calEvent) {
+        calEvent.start = calEvent.start.getTime();
+        calEvent.end = calEvent.end.getTime();
+        $.ajax({
+          url: root+'/api/tasks/save/event',
+          type: 'POST',
+          dataType: 'json',
+          data: calEvent
+        });
       },
 
       /*
@@ -1136,7 +1159,6 @@
                 else if (!options.showAsSeparateUsers && options.users && options.users.length == 1) {
                   newCalEvent = self._setEventUserId(newCalEvent, self._getUserIdFromIndex(0));
                 }
-
                 var freeBusyManager = self.getFreeBusyManagerForEvent(newCalEvent);
 
                 var $renderedCalEvent = self._renderEvent(newCalEvent, $weekDay);
@@ -1153,6 +1175,7 @@
                   'createdFromSingleClick': createdFromSingleClick,
                   'calendar': self.element
                 });
+
                 if (proceed) {
                   options.eventNew(newCalEvent, $renderedCalEvent, freeBusyManager, self.element, event);
                 }
@@ -1741,8 +1764,7 @@
 
             //has been dropped onto existing event overlapping the end time
             if (newCalEvent.start.getTime() < currentCalEvent.end.getTime() &&
-                  newCalEvent.end.getTime() >= currentCalEvent.end.getTime()) {
-
+                newCalEvent.end.getTime() >= currentCalEvent.end.getTime()) {
                 adjustedStart = currentCalEvent.end;
             }
 
@@ -1750,21 +1772,18 @@
             //has been dropped onto existing event overlapping the start time
             if (newCalEvent.end.getTime() > currentCalEvent.start.getTime() &&
                   newCalEvent.start.getTime() <= currentCalEvent.start.getTime()) {
-
                 adjustedEnd = currentCalEvent.start;
             }
             //has been dropped inside existing event with same or larger duration
             if (oldCalEvent.resizable == false ||
                   (newCalEvent.end.getTime() <= currentCalEvent.end.getTime() &&
                     newCalEvent.start.getTime() >= currentCalEvent.start.getTime())) {
-
                 adjustedStart = oldCalEvent.start;
                 adjustedEnd = oldCalEvent.end;
                 return false;
             }
 
           });
-
 
           newCalEvent.start = adjustedStart || newCalEvent.start;
 
@@ -1814,12 +1833,16 @@
           var self = this;
           var options = this.options;
           $weekDay.droppable({
-            accept: '.wc-cal-event',
+            accept: '.wc-cal-event, .list-group-item',
             drop: function(event, ui) {
                 var $calEvent = ui.draggable;
                 var top = Math.round(parseInt(ui.position.top));
+                if ($calEvent.hasClass('list-group-item')){
+                  $calEvent = ui.helper;
+                }
 
                 var eventDuration = self._getEventDurationFromPositionedEventElement($weekDay, $calEvent, top);
+
                 var calEvent = $calEvent.data('calEvent');
                 var newCalEvent = $.extend(true, {}, calEvent, {start: eventDuration.start, end: eventDuration.end});
                 var showAsSeparatedUser = options.showAsSeparateUsers && options.users && options.users.length;
@@ -1846,7 +1869,12 @@
                   }
                   newCalEvent = self._setEventUserId(newCalEvent, ((userIdList.length == 1) ? userIdList[0] : userIdList));
                 }
+                // newCalEvent.id = newCalEvent.start.getTime();
+                // if (newCalEvent.userId != undefined){
+                //   newCalEvent.id = newCalEvent.userId + "_" + newCalEvent.start.getTime();
+                // }
                 self._adjustForEventCollisions($weekDay, $calEvent, newCalEvent, calEvent, true);
+
                 var $weekDayColumns = self.element.find('.wc-day-column-inner');
 
                 //trigger drop callback
@@ -1863,7 +1891,8 @@
                   self._adjustOverlappingEvents($weekDayOld);
                 }
                 self._adjustOverlappingEvents($weekDay);
-
+                $("#task_"+newCalEvent.id).remove();
+                self.saveEvent(newCalEvent);
                 setTimeout(function() {
                   $calEvent.remove();
                 }, 1000);
@@ -1896,6 +1925,8 @@
                 self._refreshEventDetails(newCalEvent, $calEvent);
                 self._positionEvent($weekDay, $calEvent);
                 self._adjustOverlappingEvents($weekDay);
+
+                self.saveEvent(newCalEvent);
                 $calEvent.data('preventClick', true);
                 setTimeout(function() {
                   $calEvent.removeData('preventClick');
