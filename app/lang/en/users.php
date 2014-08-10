@@ -50,4 +50,32 @@ return array(
 
 	'unbanned'		=>	"User has been unbanned.",
 
+	'fname'			=>	"First Name",
+
+	'lname'			=>	"Last Name",
+
+	'colour'		=>	"Colour",
+
+	'group_membership'		=>	"Account Type",
+
+	'change_passwort'		=>	"Password Change",
+
+	'oldpassword_lbl'		=>	"Old Password",
+
+	'newpassword_lbl'		=>	"New Password",
+
+	'newcompassword_lbl'		=>	"Repeat Password",
+
+	'newcompassword_lbl'		=>	"Repeat Password",
+
+	'yours'			=>	"Your",
+
+	'title'			=>	"Title",
+
+	'phone'			=>	"Phone Number",
+
+	'ext'			=>	"Ext.",
+
+	'fax'			=>	"Fax",
+
 );

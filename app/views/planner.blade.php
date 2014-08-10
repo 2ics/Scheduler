@@ -17,13 +17,13 @@
 		            <th>Docket</th>
 		            <th>Customer</th>
 		            <th>Job Description</th>
-		            <th>Press</th>
+		            <th>Process</th>
+		            <th>Equipment</th>
 		            <th># Sheets</th>
 		            <th>Due Date</th>
-		            <th>Rep</th>
+		            <th>Rep.</th>
 		            <th>Notes</th>
 		            <th>Duration</th>
-		            <th>Colour</th>
 		            <th>Status</th>
 		            <th>Stock</th>
 		        </tr>
@@ -64,20 +64,12 @@
 				    <div class="form-group">
 				        <label class="col-lg-3 control-label">Customer</label>
 				        <div class="col-lg-5">
-				            <input type="text" class="form-control" name="customer" placeholder="Customer Name"
-				                data-bv-message="The customer name is not valid"
-
-				                data-bv-notempty="true"
-				                data-bv-notempty-message="The customer name is required and cannot be empty"
-
-				                data-bv-regexp="true"
-				                data-bv-regexp-regexp="^[a-zA-Z0-9_\.]+$"
-				                data-bv-regexp-message="The customer name can only consist of alphabetical, number, dot and underscore"
-
-				                data-bv-stringlength="true"
-				                data-bv-stringlength-min="3"
-				                data-bv-stringlength-max="30"
-				                data-bv-stringlength-message="The customer name must be more than 3 and less than 30 characters long" />
+							<select class="form-control" name="customer_id">
+								<option value="">Customer</option>
+								@foreach ($customers as $customer)
+									<option value="{{$customer->id}}">{{$customer->name}}</option>
+								@endforeach
+							</select>
 				        </div>
 				    </div>
 
@@ -87,15 +79,26 @@
 				            <textarea class="form-control" name="description"></textarea>
 				        </div>
 				    </div>
-
-				    <div class="form-group">
-				        <label class="col-lg-3 control-label">Press</label>
-				        <div class="col-lg-5">
-				            <input type="text" class="form-control" name="press" placeholder="Press"
-				                data-bv-notempty="true"
-				                data-bv-notempty-message="A press is required and cannot be empty" />
-				        </div>
-				    </div>
+			   
+					<div id="process_equipment_selector">
+						
+					    <div class="form-group">
+					        <label class="col-lg-3 control-label">Process</label>
+					        <div class="col-lg-5">
+								<select class="process_select form-control" name="process_select">
+									<option value="">Process</option>
+								</select>
+					        </div>
+					    </div>
+					    <div class="form-group">
+					        <label class="col-lg-3 control-label">Equipment</label>
+					        <div class="col-lg-5">
+								<select class="equipment_select form-control" name="equipment_id">
+									<option value="">Equipment</option>
+								</select>
+					        </div>
+					    </div>
+					</div>
 
 				    <div class="form-group">
 				        <label class="col-lg-3 control-label"># Sheets</label>
@@ -116,20 +119,12 @@
 				    <div class="form-group">
 				        <label class="col-lg-3 control-label">Rep</label>
 				        <div class="col-lg-5">
-				            <input type="text" class="form-control" name="rep" placeholder="Rep"
-				                data-bv-message="The representative name is not valid"
-
-				                data-bv-notempty="true"
-				                data-bv-notempty-message="The representative name is required and cannot be empty"
-
-				                data-bv-regexp="true"
-				                data-bv-regexp-regexp="^[a-zA-Z0-9_\.]+$"
-				                data-bv-regexp-message="The representative name can only consist of alphabetical, number, dot and underscore"
-
-				                data-bv-stringlength="true"
-				                data-bv-stringlength-min="3"
-				                data-bv-stringlength-max="30"
-				                data-bv-stringlength-message="The representative name must be more than 3 and less than 30 characters long" />
+							<select class="form-control" name="user_id">
+								<option value="">Rep</option>
+								@foreach ($users as $user)
+									<option value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+								@endforeach
+							</select>
 				        </div>
 				    </div>
 
@@ -150,18 +145,9 @@
 				    </div>
 
 				    <div class="form-group">
-				        <label class="col-lg-3 control-label">Colour</label>
-				        <div class="col-lg-5">
-				            <input type="text" class="form-control" name="colour" placeholder="100"
-				                data-bv-notempty="true"
-				                data-bv-notempty-message="A colour is required and cannot be empty" />
-				        </div>
-				    </div>
-
-				    <div class="form-group">
 				        <label class="col-lg-3 control-label">Status</label>
 				        <div class="col-lg-5">
-				            <select name='status' class='form-control selectpicker'>
+				            <select name='status' class='form-control'>
 				            	<option value='In Progress'>In Progress</option>
 				            </select>
 				        </div>
@@ -190,16 +176,28 @@
 @section('javascript')
 <script>
 var t = null;
+var processEquipment = Array();
 $(document).ready( function () {
+	$.ajax({
+        url: root+'/api/select/process/equipment',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+        	processEquipment = data;
+        	console.log(data);
+        }
+    });
   $.fn.editable.defaults.mode = 'popup';
 	$('#myModal').on('shown.bs.modal', function (e) {
 		t.ajax.reload();
+		activate_dropdown();
 		$('#date').combodate({
 			smartDays: true,
 			customClass: "form-control"
 		});    
 		$('#attributeForm').bootstrapValidator({
         submitHandler: function(form) {
+        	console.log($("#attributeForm").serializeArray());
             $.ajax({
 		        url: root+'/api/tasks/add',
 		        type: 'POST',
@@ -225,13 +223,13 @@ $(document).ready( function () {
           { "data": "docket", },
           { "data": "customer", },
           { "data": "description", },
-          { "data": "press", },
+          { "data": "process", },
+          { "data": "equipment", },
           { "data": "sheets", },
           { "data": "due_date", },
-          { "data": "rep", },
+          { "data": "user", },
           { "data": "notes", },
           { "data": "duration", },
-          { "data": "colour", },
           { "data": "status", },
           { "data": "stock", }
       ],
@@ -298,12 +296,26 @@ function activate_editables() {
     });
 	$('.customer').editable({
 		title: 'Enter Customer Name',
+		type: 'select',
+		source: function(){
+			var result;
+			$.ajax({
+		        url: root+'/api/customers/all',
+		        type: 'GET',
+		        async: false,
+		        dataType: 'json',
+		        success: function(data) {
+		        	result = data;
+		        }
+		    });
+		    return result;
+		},
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
 		        type: 'POST',
 		        dataType: 'text',
-		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'customer', value: newValue},
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'customer_id', value: newValue},
 		        success: function() {
 		        	t.ajax.reload();
 		        }
@@ -320,20 +332,6 @@ function activate_editables() {
 		        type: 'POST',
 		        dataType: 'text',
 		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'description', value: newValue},
-		        success: function() {
-		        	t.ajax.reload();
-		        }
-		    });
-        }
-    });
-	$('.press').editable({
-		title: 'Enter Press',
-        success: function(response, newValue) {
-            $.ajax({
-		        url: root+'/api/tasks/editcolumn',
-		        type: 'POST',
-		        dataType: 'text',
-		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'press', value: newValue},
 		        success: function() {
 		        	t.ajax.reload();
 		        }
@@ -380,7 +378,6 @@ function activate_editables() {
 	    }
  	});
 	$('.notes').editable({title: 'Enter Note', 'type':'textarea', 'placement': 'right',
-
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
@@ -419,13 +416,61 @@ function activate_editables() {
 		    });
         }
     });
-	$('.rep').editable({title: 'Enter Representative',
+	$('.user').editable({title: 'Enter Representative',
+		type: 'select',
+		source: function(){
+			var result;
+			$.ajax({
+		        url: root+'/api/users/all',
+		        type: 'GET',
+		        async: false,
+		        dataType: 'json',
+		        success: function(data) {
+		        	result = data;
+		        }
+		    });
+		    return result;
+		},
         success: function(response, newValue) {
             $.ajax({
 		        url: root+'/api/tasks/editcolumn',
 		        type: 'POST',
 		        dataType: 'text',
-		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'rep', value: newValue},
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'user_id', value: newValue},
+		        success: function() {
+		        	t.ajax.reload();
+		        }
+		    });
+        }
+    });
+	$('.process').editable({title: 'Select Process',
+		type: 'select',
+		source: function(){
+			var result;
+			$.ajax({
+		        url: root+'/api/select/processes/all',
+		        type: 'GET',
+		        async: false,
+		        dataType: 'json',
+		        success: function(data) {
+		        	result = data;
+		        }
+		    });
+		    return result;
+		},
+        success: function(response, newValue) {
+        	$('.equipment').editable('option', 'source', processEquipment[newValue]);
+        }
+    });
+	$('.equipment').editable({
+		title: 'Select Equipment',
+		type: 'select',
+        success: function(response, newValue) {
+            $.ajax({
+		        url: root+'/api/tasks/editcolumn',
+		        type: 'POST',
+		        dataType: 'text',
+		        data: {id: $($.parseHTML(t.row($(this).closest('tr').index()).data().id)).text(), field: 'equipment_id', value: newValue},
 		        success: function() {
 		        	t.ajax.reload();
 		        }
@@ -471,6 +516,44 @@ function activate_editables() {
 		    });
         }
     });
+}
+
+function activate_dropdown() {
+	var dropdown = $('#process_equipment_selector').cascadingDropdown({
+		selectBoxes: [
+			{
+				selector: '.process_select',
+				source: function(request, response) {
+					$.getJSON(root+'/api/select/processes/all', request, function(data) {
+						var selectOnlyOption = data.length <= 1;
+						response($.map(data, function(item, index) {
+							return {
+								label: item.text,
+								value: item.value,
+								selected: 0
+							};
+						}));
+					});
+				}
+			},
+			{
+				selector: '.equipment_select',
+				requires: ['.process_select'],
+				source: function(request, response) {
+					$.getJSON(root+'/api/select/'+$('.process_select').val()+'/equipments', request, function(data) {
+						var selectOnlyOption = data.length <= 1;
+						response($.map(data, function(item, index) {
+							return {
+								label: item.text,
+								value: item.value,
+								selected: 0
+							};
+						}));
+					});
+				}
+			}
+		]
+	});
 }
 
 </script>

@@ -110,6 +110,7 @@ return array(
 		'Authority\Service\Form\FormServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
 		'Stolz\Assets\ManagerServiceProvider',
+		'Maatwebsite\Excel\ExcelServiceProvider',
 
 	),
 
@@ -176,7 +177,8 @@ return array(
         'URL' 			=> 'Illuminate\Support\Facades\URL',
         'Validator' 	=> 'Illuminate\Support\Facades\Validator',
         'View' 			=> 'Illuminate\Support\Facades\View',
-		'Sentry'		=> 'Cartalyst\Sentry\Facades\Laravel\Sentry'
+		'Sentry'		=> 'Cartalyst\Sentry\Facades\Laravel\Sentry',
+        'Excel' => 'Maatwebsite\Excel\Facades\Excel'
 
 	),
 

@@ -18,17 +18,19 @@
             </h4>
           </div>
           <div class="panel-collapse">
-            <ul class="list-group">
-              <li class="list-group-item"><a data-toggle="collapse" href="#collapseTasks">Tasks</a><span class="badge">4</span>
-                <ul class="list-group in" id="collapseTasks">
-                </ul>
-              </li>
+            <ul class="list-group" id="taskControl">
+              
             </ul>
           </div>
         </div>
       </div>
   </div>
   <div class="col-md-9">
+    <ul class="nav nav-tabs" role="tablist">
+      @foreach ($processes as $index => $process)
+          <li {{ (Request::is('process/'.$process->name) ? 'class="active"' : '') }}><a href="{{action('HomeController@scheduleProcess', array('process_name' => $process->name))}}">{{$process->name}}</a></li>
+      @endforeach
+    </ul>
     <div id="calendar"></div>
   </div>
 </div>
@@ -61,12 +63,11 @@
             },
             data: function(start, end, callback) {
               $.ajax({
-                url: root+'/api/tasks/bydate',
+                url: root+'/api/tasks/{{$process_id}}/bydate',
                 type: 'POST',
                 dataType: 'json',
                 data: {start: start.getTime(), end: end.getTime()},
                 success: function(events) {
-                  console.log(events);
                   callback(events);
                 }
               });
@@ -79,7 +80,7 @@
             headerSeparator: ' ',
             useShortDayNames: true,
             // I18N
-            dateFormat: 'F d, y'
+            dateFormat: 'F d, Y'
           });
         }
       });
@@ -91,14 +92,18 @@
       type: 'GET',
       dataType: 'json',
       success: function(events) {
-        if ($.isEmptyObject(events)){
-          $("#collapseTasks").append('<li class="list-group-item empty-item">Empty</li>');
-        }
-        $.each(events, function(index, element){
-          var task = $('<li class="list-group-item" id="task_'+element.id+'">'+element.description+'</li>');
-          task.data('calEvent', {userId: element.userId, title: element.description, id: element.id});
-          $("#collapseTasks").append(task);
-          create_draggable_items();
+        all_events = events;
+        $.each(events, function(processIndex, process){
+          $("#taskControl").append('<li class="list-group-item"><a data-toggle="collapse" href="#collapseProcess'+processIndex+'">'+processIndex+'</a><span class="badge">4</span> <ul class="list-group in" id="collapseProcess'+processIndex+'"> </ul> </li>'); 
+          $.each(process, function(equipmentIndex, equipment){
+            $("#collapseProcess"+processIndex).append('<li class="list-group-item"><a data-toggle="collapse" href="#collapseEquipment'+equipmentIndex+'">'+equipmentIndex+'</a><span class="badge">4</span> <ul class="list-group in" id="collapseEquipment'+equipmentIndex+'"> </ul> </li>'); 
+            $.each(equipment, function(index, element){
+              var task = $('<li class="list-group-item" id="task_'+element.id+'">'+element.customer+ ' - ' +element.description+'</li>');
+              task.data('calEvent', {userId: element.userId, colour: element.colour, title: element.description, id: element.id});
+              $("#collapseEquipment"+equipmentIndex).append(task);
+              create_draggable_items();
+            });
+          });
         });
       }
     });
@@ -118,14 +123,18 @@
       appendTo: ".wc-grid-row-events .wc-full-height-column.wc-user-0",
       containment: [$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().top,$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().top+1200],
       stop: function(event, ui){
-        console.log($(event.target).data('draggable'));
-        $calendar.data('weekCalendar').save();
+        // console.log($(event.target).data('draggable'));
+        // function update_task_count();
       },
       drag: function(event, ui){
-        console.log($(ui.helper).data('calEvent').userId);
+        // console.log($(ui.helper).data('calEvent').userId);
         $(event.target).data('draggable').containment = [$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().top,$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().top+1200];
       }
     });
   }
+
+  // function update_task_count() {
+
+  // }
   </script>
 @stop

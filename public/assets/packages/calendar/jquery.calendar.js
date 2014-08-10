@@ -32,7 +32,7 @@
       options: {
         date: new Date(),
         timeFormat: null,
-        dateFormat: 'M d, Y',
+        dateFormat: 'M d, y',
         alwaysDisplayTimeMinutes: true,
         use24Hour: false,
         daysToShow: 7,
@@ -726,7 +726,7 @@
 
             calendarNavHtml += '<div class=\"ui-widget-header wc-toolbar\">';
               calendarNavHtml += '<div class=\"wc-display\"></div>';
-              calendarNavHtml += '<div class=\"wc-nav\">';
+              calendarNavHtml += '<div class=\"wc-nav\" style=\"\">';
                 calendarNavHtml += '<button class=\"wc-prev\">' + options.buttonText.lastWeek + '</button>';
                 calendarNavHtml += '<button class=\"wc-today\">' + options.buttonText.today + '</button>';
                 calendarNavHtml += '<button class=\"wc-next\">' + options.buttonText.nextWeek + '</button>';
@@ -1391,7 +1391,7 @@
             title = title.replace('%end%', self._formatDate(end, date_format));
             title = title.replace('%date%', self._formatDate(date, date_format));
 
-            $('.wc-toolbar .wc-title', self.element).html(title);
+            // $('.wc-toolbar .wc-title', self.element).html(title);
           }
           //self._clearFreeBusys();
       },
@@ -1527,10 +1527,13 @@
 
           var eventClass, eventHtml, $calEventList, $modifiedEvent;
 
+          var lightColour = calEvent.colour;
+          var darkColour = self.ColorLuminance("#"+lightColour, -0.4);
+
           eventClass = calEvent.id ? 'wc-cal-event' : 'wc-cal-event wc-new-cal-event';
-          eventHtml = '<div class=\"' + eventClass + ' ui-corner-all\">';
-          eventHtml += '<div class=\"wc-time ui-corner-top\"></div>';
-          eventHtml += '<div class=\"wc-title\"></div></div>';
+          eventHtml = '<div class=\"' + eventClass + ' ui-corner-all\" style="background-color: #'+calEvent.colour+'">';
+          eventHtml += '<div class=\"wc-time ui-corner-top\" style="background-color: '+darkColour+'; border: 1px solid '+darkColour+'"></div>';
+          eventHtml += '<div class=\"wc-title\" style="background-color: #'+calEvent.colour+'"></div></div>';
 
           $weekDay.each(function() {
             var $calEvent = $(eventHtml);
@@ -1564,6 +1567,27 @@
       },
       addEvent: function() {
         return this._renderEvent.apply(this, arguments);
+      },
+
+      ColorLuminance: function(hex, lum) {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+          hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        var rgb = "#", c, i;
+        for (i = 0; i < 3; i++) {
+          c = parseInt(hex.substr(i*2,2), 16);
+          c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+          rgb += ("00"+c).substr(c.length);
+        }
+        console.log(rgb);
+
+        return rgb;
       },
 
       _adjustOverlappingEvents: function($weekDay) {
@@ -1947,7 +1971,7 @@
         suffix = '<div class="wc-cal-event-delete ui-icon ui-icon-close"></div>';
     }
           $calEvent.find('.wc-time').html(this.options.eventHeader(calEvent, this.element) + suffix);
-          $calEvent.find('.wc-title').html(this.options.eventBody(calEvent, this.element));
+          // $calEvent.find('.wc-title').html(this.options.eventBody(calEvent, this.element));
           $calEvent.data('calEvent', calEvent);
           this.options.eventRefresh(calEvent, $calEvent);
       },
@@ -2656,8 +2680,8 @@
         {
           return options.getHeaderDate(date, this.element);
         }
-        var dayName = options.useShortDayNames ? options.shortDays[date.getDay()] : options.longDays[date.getDay()];
-        return dayName + (options.headerSeparator) + this._formatDate(date, options.dateFormat);
+        var dayName = options.longDays[date.getDay()];
+        return dayName + ", " + (options.headerSeparator) + this._formatDate(date, options.dateFormat);
       },
 
 
@@ -2694,15 +2718,15 @@
         timeFormat: true,
         dateFormat: true,
         use24Hour: true,
-        useShortDayNames: true,
+        useShortDayNames: false,
         businessHours: true,
         timeslotHeight: true,
         timeslotsPerHour: true,
         buttonText: true,
         height: true,
-        shortMonths: true,
+        shortMonths: false,
         longMonths: true,
-        shortDays: true,
+        shortDays: false,
         longDays: true,
         textSize: true,
         users: true,

@@ -3,7 +3,8 @@
 		"laravel/framework": "4.1.*",
 		"cartalyst/sentry": "~2.1",
 		"venturecraft/revisionable": "1.*",
-		"stolz/assets": "dev-master"
+		"stolz/assets": "dev-master",
+		"maatwebsite/excel": "1.*"
 	},
 	"require-dev": {
 		"way/generators": "~2.6",

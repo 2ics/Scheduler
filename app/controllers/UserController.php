@@ -479,6 +479,20 @@ class UserController extends BaseController {
         }
 	}
 
+    public function allUsers()
+    {
+        $users = User::all();
+
+        $all_users = array();
+        foreach ($users as $user){
+            $temp_user['value'] = $user->id;
+            $temp_user['text'] = $user->first_name . " " . $user->last_name;
+            $all_users[] = $temp_user;
+        }
+
+        return $all_users;
+    }
+
 
 }
 

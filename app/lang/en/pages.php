@@ -70,6 +70,8 @@ return array(
 
 	'scheduler'		=> "Scheduler",
 
+	'profile'		=>	"Profile",
+
 	''	=> "",
 
 	''	=> "",

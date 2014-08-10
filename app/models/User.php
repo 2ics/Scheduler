@@ -4,7 +4,10 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends \Cartalyst\Sentry\Users\Eloquent\User implements UserInterface, RemindableInterface {
+    use \Venturecraft\Revisionable\RevisionableTrait;
 
+	protected $revisionEnabled = true;
+	
 	/**
 	 * The database table used by the model.
 	 *
@@ -47,6 +50,21 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements UserInterfac
 	public function getReminderEmail()
 	{
 		return $this->email;
+	}
+
+	public function getRememberToken()
+	{
+	    return $this->remember_token;
+	}
+
+	public function setRememberToken($value)
+	{
+	    $this->remember_token = $value;
+	}
+
+	public function getRememberTokenName()
+	{
+	    return $this->remember_token;
 	}
 
 }

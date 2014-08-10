@@ -39,14 +39,11 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	          </button>
-	          <a class="navbar-brand" href="{{ URL::route('home') }}">{{trans('pages.name')}}</a>
+	          <img src="{{asset('/img/zen_logo.png')}}" class="img-responsive" />
 	        </div>
 	        <div class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
-				@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
-					<li {{ (Request::is('users*') ? 'class="active"' : '') }}><a href="{{ URL::to('/users') }}">{{trans('pages.users')}}</a></li>
-					<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">{{trans('pages.groups')}}</a></li>
-				@endif
+				@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))@endif
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">
 				<li {{ (Request::is('planner') ? 'class="active"' : '') }}><a href="{{ URL::to('planner') }}">{{trans('pages.planner')}}</a></li>

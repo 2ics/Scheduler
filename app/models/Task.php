@@ -13,4 +13,9 @@ class Task extends Eloquent {
     {
         return $this->hasOne('ProcessEquipment');
     }
+    
+    public function customer()
+    {
+        return $this->hasOne('Customer');
+    }
 }

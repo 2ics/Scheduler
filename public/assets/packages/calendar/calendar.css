@@ -68,7 +68,8 @@
 
 .wc-header .wc-scrollbar-shim {
     width: 16px;
-    background-color: #FAD163; border-color: #FAD163;
+    background-color: #E2E5E9; 
+    border-color: #E2E5E9;
 }
 
 .wc-header .wc-day-column-header {
@@ -159,9 +160,9 @@ table.wc-time-slots {
 
 .wc-time-slots .wc-day-column.ui-state-default{background:transparent;}
 .wc-time-slots .wc-today.ui-state-active{background-image:none;}
-.wc-header .wc-today.ui-state-active.wc-day-column-middle{border-width:0;}
-.wc-header .wc-today.ui-state-active.wc-day-column-first{border-left-width:3px;}
-.wc-header .wc-today.ui-state-active.wc-day-column-last{border-right-width:3px;}
+.wc-header .wc-today.ui-state-active.wc-day-column-middle{border-width:0;background-color: #FF0000;border-right-color: #000000;border-right-width: 1px;}
+.wc-header .wc-today.ui-state-active.wc-day-column-first{border-left-width:3px;background-color: #FF0000;border-right-width: 1px;border-right-color: #000000;}
+.wc-header .wc-today.ui-state-active.wc-day-column-last{border-right-width:3px;background-color: #FF0000;}
 
 .wc-full-height-column{
     display:block;

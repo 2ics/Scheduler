@@ -16,17 +16,18 @@ class Tasks extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('equipment_id')->unsigned()->index();
-			$table->foreign('equipment_id')->references('id')->on('equipments')->onDelete('cascade');
+			$table->foreign('equipment_id')->references('id')->on('equipment')->onDelete('cascade');
+			$table->integer('customer_id')->unsigned()->index();
+			$table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+			$table->integer('user_id')->unsigned()->index();
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 			$table->string('docket')->nullable();
-			$table->string('customer')->nullable();
 			$table->string('description')->nullable();
 			$table->string('press')->nullable();
 			$table->string('sheets')->nullable();
 			$table->string('due_date')->nullable();
-			$table->string('rep')->nullable();
 			$table->string('notes')->nullable();
 			$table->string('duration')->nullable();
-			$table->string('colour')->nullable();
 			$table->string('status')->nullable();
 			$table->string('stock')->nullable();
 			$table->string('start_date')->nullable();

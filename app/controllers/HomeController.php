@@ -22,7 +22,7 @@ class HomeController extends BaseController {
 
 	public function planner()
 	{
-		return View::make('planner');
+		return View::make('planner')->with(array('customers' => Customer::all()))->with(array('users' => User::all()));
 	}
 
 	public function scheduler()
@@ -36,7 +36,7 @@ class HomeController extends BaseController {
 		Assets::add('scheduler'); 
 
 		$process = Process::where('name', '=', $process_name)->first();
-		return View::make('process_schedule')->with(array('process_id' => $process->id));
+		return View::make('process_schedule')->with(array('process_id' => $process->id))->with(array('processes' => Process::all()));
 	}
 
 }

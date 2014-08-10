@@ -33,7 +33,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		try {
 			//Attempt to register the user. 
 			$user = $this->sentry->register(array('email' => e($data['email']), 'password' => e($data['password'])));
-
+			
 			//success!
 	    	$result['success'] = true;
 	    	$result['message'] = trans('users.created');
@@ -72,6 +72,11 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		    // Update the user details
 		    $user->first_name = e($data['firstName']);
 		    $user->last_name = e($data['lastName']);
+		    $user->title = e($data['title']);
+		    $user->phone = e($data['phone']);
+		    $user->ext = e($data['ext']);
+		    $user->fax = e($data['fax']);
+		    $user->colour = e($data['colour']);
 
 		    // Only Admins should be able to change group memberships. 
 		    $operator = $this->sentry->getUser();
