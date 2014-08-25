@@ -66,11 +66,13 @@ return array(
 
 	'name'			=> "Flash Scheduling",
 
-	'planner'		=> "Planner",
+	'create'		=> "Create Project",
 
 	'scheduler'		=> "Scheduler",
 
 	'profile'		=>	"Profile",
+
+	'edit'			=>	"Editor",
 
 	''	=> "",
 

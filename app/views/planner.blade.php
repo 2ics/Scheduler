@@ -13,19 +13,17 @@
 		<table id="table_id" class="display">
 		    <thead>
 		        <tr>
-                <th>ID</th>
+                	<th>Description</th>
 		            <th>Docket</th>
 		            <th>Customer</th>
-		            <th>Job Description</th>
-		            <th>Process</th>
-		            <th>Equipment</th>
-		            <th># Sheets</th>
+		            <th>Rep</th>
+		            <th>Input Date</th>
 		            <th>Due Date</th>
-		            <th>Rep.</th>
-		            <th>Notes</th>
-		            <th>Duration</th>
+		            <th>Completion Time</th>
+		            <th>Overdue</th>
+		            <th>Scheduled</th>
+		            <th>Total Tasks</th>
 		            <th>Status</th>
-		            <th>Stock</th>
 		        </tr>
 		    </thead>
 		</table>

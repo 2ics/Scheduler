@@ -6,16 +6,13 @@ class Task extends Eloquent {
 	// protected $revisionEnabled = true;
 
     protected $table = 'tasks';
+    
+    public static $unguarded = true;
 	
 	protected $softDelete = true;
 	
-    public function equipment()
-    {
-        return $this->hasOne('ProcessEquipment');
-    }
-    
     public function customer()
     {
-        return $this->hasOne('Customer');
+        return $this->belongsTo('Project');
     }
 }

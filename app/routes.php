@@ -69,6 +69,14 @@ Route::get('api/tasks/process/equipment/order/{id}', 'TaskController@getEquipmen
 Route::get('api/tasks/process/all', 'TaskController@allProcesses');
 
 
+Route::get('project/create', 'ProjectController@create');
+Route::get('project/editor', 'ProjectController@editor');
+Route::get('project/getEquipment', 'ProjectController@getEquipment');
+Route::post('project/save', 'ProjectController@save');
+Route::get('project/getAll', 'ProjectController@getAll');
+Route::get('project/edit/{project_id}', 'ProjectController@edit');
+
+
 Route::get('api/customers/all', 'CustomerController@allCustomers');
 Route::get('api/select/processes/all', 'TaskController@allProcessesSelect');
 Route::get('api/select/{process_id}/equipments', 'TaskController@allEquipmentByProcessSelect');

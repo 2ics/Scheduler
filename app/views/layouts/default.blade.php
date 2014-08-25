@@ -39,16 +39,17 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	          </button>
-	          <img src="{{asset('/img/zen_logo.png')}}" class="img-responsive" />
 	        </div>
 	        <div class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
 				@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))@endif
-	          </ul>
-	          <ul class="nav navbar-nav navbar-right">
-				<li {{ (Request::is('planner') ? 'class="active"' : '') }}><a href="{{ URL::to('planner') }}">{{trans('pages.planner')}}</a></li>
+				<li {{ (Request::is('project/create') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@create') }}">{{trans('pages.create')}}</a></li>
+
+				<li {{ (Request::is('project/editor') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@editor') }}">{{trans('pages.edit')}}</a></li>
 				
 				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ URL::to('scheduler') }}">{{trans('pages.scheduler')}}</a></li>
+	          </ul>
+	          <ul class="nav navbar-nav navbar-right">
 				
 	            @if (Sentry::check())
 				<li {{ (Request::is('users/show/' . Session::get('userId')) ? 'class="active"' : '') }}><a href="{{ URL::to('users') }}/{{ Session::get('userId') }}">{{ Session::get('email') }}</a></li>
@@ -65,6 +66,10 @@
 
 		<!-- Container -->
 		<div class="container">
+			<div class="row" style="margin-bottom: 15px;">
+				<div class="col-md-6"><img src="{{asset('/img/zen_logo.png')}}" class="img-responsive" /></div>
+				<div class="col-md-6 text-right"><h2 style="margin:0px; padding: 0px;">{{date('l, F d, Y', time())}}</h2></div>
+			</div>
 			<!-- Notifications -->
 			@include('layouts/notifications')
 			<!-- ./ notifications -->

@@ -4,7 +4,7 @@ if (!isset($_SERVER['DATABASE1_HOST'])){
 	$_SERVER['DATABASE1_HOST'] = "localhost";
 }
 if (!isset($_SERVER['DATABASE1_NAME'])){
-	$_SERVER['DATABASE1_NAME'] = "timemanagement";
+	$_SERVER['DATABASE1_NAME'] = "scheduler";
 }
 if (!isset($_SERVER['DATABASE1_USER'])){
 	$_SERVER['DATABASE1_USER'] = "root";
