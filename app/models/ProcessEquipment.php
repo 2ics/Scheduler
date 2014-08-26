@@ -21,6 +21,13 @@ class ProcessEquipment extends Eloquent {
 
     public function unscheduledTasks()
     {
-    	return Task::where('equipment_id', '=', $this->id)->whereNull('start_date')->whereNull('end_date')->get();
+    	$allTasks = array();
+    	foreach (Task::where('equipment_id', '=', $this->id)->whereNull('start_date')->whereNull('end_date')->get() as $task){
+    		if ($task->project()->first()->sent_to_schedule){
+    			$allTasks[] = $task;
+    		}
+    	}
+
+    	return $allTasks;
     }
 }
