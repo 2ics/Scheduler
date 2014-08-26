@@ -3,13 +3,13 @@ if (isset($_SERVER['HTTP_HOST'])){
 	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost:8888"){
 		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/Scheduler/public";
 	}else{
-		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST'];
+		$_SERVER['HTTP_HOST'] = "http://".$_SERVER['HTTP_HOST'];
 	}
 }
 if (isset($_SERVER['HTTP_HOST'])){
 	$url = $_SERVER['HTTP_HOST'];
 }else{
-	$url = "http://localhost:8888/scheduler/public";
+	$url = "http://localhost:8888/Scheduler/public";
 }
 return array(
 
