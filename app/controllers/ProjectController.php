@@ -33,6 +33,14 @@ class ProjectController extends BaseController {
 		return View::make('project.editor');
 	}
 
+	public function scheduler()
+	{
+		Assets::add('scheduler'); 
+
+		$process = Process::first();
+		return View::make('process_schedule')->with('process_id', $process->id)->with('processes', Process::all())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
+	}
+
 	public function getAll(){
 		$projects = Project::all();
 		$allProjects = array();

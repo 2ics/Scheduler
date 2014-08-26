@@ -29,7 +29,7 @@
                     <ul class="list-group collapse in" id="collapse{{$process->id}}">
                       @foreach($process->equipment()->get() as $equipment)
                         @if (count($equipment->unscheduledTasks()) > 0)
-                        <li class="list-group-item"><span class="glyphicon glyphicon-pencil text-primary"></span><a data-toggle="collapse" href="#collapse{{$process->id}}{{$equipment->id}}">{{$equipment->name}}<span class="badge pull-right">{{count($equipment->tasks())}}</span></a>
+                        <li class="list-group-item"><span class="glyphicon glyphicon-pencil text-primary"></span><a data-toggle="collapse" href="#collapse{{$process->id}}{{$equipment->id}}">{{$equipment->name}}<span class="badge pull-right">{{count($equipment->unscheduledTasks())}}</span></a>
                           <ul class="list-group collapse in" id="collapse{{$process->id}}{{$equipment->id}}">
                               @foreach($equipment->unscheduledTasks() as $task)
                                 <li class="list-group-item task" data-userid="{{$task->getCalendarUserId()}}" data-colour="{{User::find($task->project()->first()->user_id)->colour}}" data-title="{{$task->project()->first()->description}}" data-id="{{$task->id}}"><span class="glyphicon glyphicon-pencil text-primary"></span>

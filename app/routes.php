@@ -55,7 +55,6 @@ Route::get('admin/upload/customers', 'UploadController@customers');
 Route::post('admin/upload/customers/submit', 'UploadController@uploadCustomers');
 
 Route::get('planner', 'HomeController@planner');
-Route::get('scheduler', 'HomeController@scheduler');
 Route::get('process/{name}', 'HomeController@scheduleProcess');
 Route::get('api/tasks/get', 'TaskController@getTasks');
 Route::post('api/tasks/add', 'TaskController@addTask');
@@ -71,6 +70,7 @@ Route::get('api/tasks/process/all', 'TaskController@allProcesses');
 
 Route::get('project/create', 'ProjectController@create');
 Route::get('project/editor', 'ProjectController@editor');
+Route::get('scheduler', 'ProjectController@scheduler');
 Route::get('project/getEquipment', 'ProjectController@getEquipment');
 Route::post('project/save', 'ProjectController@save');
 Route::get('project/delete/{project_id}', 'ProjectController@delete');

@@ -48,7 +48,7 @@
 
 				<li {{ (Request::is('project/editor') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@editor') }}">{{trans('pages.edit')}}</a></li>
 				
-				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ URL::to('scheduler') }}">{{trans('pages.scheduler')}}</a></li>
+				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@scheduler') }}">{{trans('pages.scheduler')}}</a></li>
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">
 				
