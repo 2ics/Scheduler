@@ -1,16 +1,16 @@
 <?php
 
 if (isset($_SERVER['HTTP_HOST'])){
-	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost"){
+	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost:8888"){
 		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/scheduler/public";
 	}else{
-		$_SERVER['HTTP_HOST'] = "http://localhost/scheduler/public";
+		$_SERVER['HTTP_HOST'] = "http://localhost:8888/scheduler/public";
 	}
 }
 if (isset($_SERVER['HTTP_HOST'])){
 	$url = $_SERVER['HTTP_HOST'];
 }else{
-	$url = "http://localhost/scheduler/public";
+	$url = "http://localhost:8888/scheduler/public";
 }
 return array(
 
@@ -77,6 +77,7 @@ return array(
 		                'stylesheets/main/bootstrap.min.css',
 		                'stylesheets/main/justified-nav.css',
 		                'stylesheets/main/breadcrumbs.css',
+		                'stylesheets/main/main.css',
 		                'stylesheets/main/basic.css',
 		                'stylesheets/main/bootstrapValidator.min.css',
 		                'stylesheets/main/chosen.min.css',
@@ -127,6 +128,7 @@ return array(
 		                'stylesheets/main/justified-nav.css',
 		                'stylesheets/main/breadcrumbs.css',
 		                'stylesheets/main/basic.css',
+		                'stylesheets/main/main.css',
 		                'stylesheets/main/bootstrapValidator.min.css',
 		                'stylesheets/main/chosen.min.css',
 		                'stylesheets/main/ui-lightness/jquery-ui-1.10.4.min.css',

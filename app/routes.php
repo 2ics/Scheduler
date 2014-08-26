@@ -73,8 +73,10 @@ Route::get('project/create', 'ProjectController@create');
 Route::get('project/editor', 'ProjectController@editor');
 Route::get('project/getEquipment', 'ProjectController@getEquipment');
 Route::post('project/save', 'ProjectController@save');
+Route::get('project/delete/{project_id}', 'ProjectController@delete');
 Route::get('project/getAll', 'ProjectController@getAll');
 Route::get('project/edit/{project_id}', 'ProjectController@edit');
+Route::get('project/schedule/{project_id}', 'ProjectController@schedule');
 
 
 Route::get('api/customers/all', 'CustomerController@allCustomers');

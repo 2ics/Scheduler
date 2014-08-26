@@ -52,6 +52,10 @@
 						<textarea class="form-control" rows="2" id="stock"></textarea>
 					</div>
 					<div class="form-group">
+						<label for="notes">Notes</label>
+						<textarea class="form-control" rows="2" id="notes"></textarea>
+					</div>
+					<div class="form-group">
 						<label for="customer">Rep</label>
 						<select class="form-control" id="rep" placeholder="Select Representative">
 						@foreach($users as $user)
@@ -84,7 +88,7 @@
 				</div>
 			</div>
 			<div class="col-md-12 text-right">
-				<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save Project for Later</button>
+				<button type="button" class="btn btn-primary save-project"><span class="glyphicon glyphicon-save"></span> Save Project for Later</button>
 				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-calendar"></span> Add to Schedule</button>
 			</div>
 		</form>
@@ -127,33 +131,10 @@ $(document).ready(function(){
 	$("#projectForm").unbind('click', "form#projectForm.bv-form");
     $("#projectForm").submit(function(e){
     	e.preventDefault();
-    	if($("#projectForm").data('bootstrapValidator').isValid()){
-	    	var formData = {};
-	    	formData.project = {};
-	    	formData['project']['description'] = $("#description").val();
-	    	formData['project']['docket'] = $("#docket").val();
-	    	formData['project']['sheets'] = $("#sheets").val();
-	    	formData['project']['stock'] = $("#stock").val();
-	    	formData['project']['customer_id'] = $("#customer").val();
-	    	formData['project']['user_id'] = $("#rep").val();
-	    	formData['project']['due_date'] = $("#duedate").val();
-	    	formData.tasks = {};
-	    	$.each($(".tasks").find(".panel"), function(index, element){
-	    		formData['tasks'][index] = {};
-	    		formData['tasks'][index]['process_id'] = $(element).find(".process").val();
-	    		formData['tasks'][index]['equipment_id'] = $(element).find(".equipment").val();
-	    		formData['tasks'][index]['duration'] = $(element).find(".duration").val();
-	    		formData['tasks'][index]['status'] = $(element).find(".status").val();
-	    	});
-      		$.ajax({
-		        url: root+'/project/save',
-		        type: 'POST',
-		        data: formData,
-		        success: function(data) {
-		        	window.location.href = "{{action('ProjectController@editor')}}";
-		        }
-		    });
-    	}
+    	createProject(true);
+    });
+    $(".save-project").click(function(){
+    	createProject(false)
     });
 	$("#customer, #rep").chosen();
 	$('#duedate').combodate({
@@ -173,21 +154,67 @@ $(document).ready(function(){
 });
 
 $("#addTask").click(function(){
-	$(".tasks").append('<div class="panel panel-info"> <div class="panel-heading"> <h4 class="panel-title pull-left"> <a data-toggle="collapse" href="#collapseTask'+num_tasks+'"> Task </a> </h4> <div class="col-md-2 pull-right text-right" style="padding: 0px;"> <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal"> <span class="glyphicon glyphicon-trash" style="margin: 0px;"></span> </button> </div> <div class="clearfix"></div> </div> <div id="collapseTask'+num_tasks+'" class="panel-collapse collapse in"> <div class="panel-body"> <div class="form-group"> <label for="process">Process</label> <select class="form-control process" id="process" placeholder="Select Process"> @foreach($processes as $process) <option value="{{$process->id}}"">{{$process->name}}</option> @endforeach </select> </div> <div class="form-group"> <label for="equipment">Equipment</label> <select class="form-control equipment" id="equipment" placeholder="Select Equipment"> @foreach($processes[0]->equipment()->get() as $equipment) <option value="{{$equipment->id}}">{{$equipment->name}}</option> @endforeach </select> </div> <div class="form-group"> <label for="duration">Duration</label> <input type="number" class="form-control duration" name="duration[]" id="duration" placeholder="Enter Duration" required> </div> <div class="form-group"> <label for="status">Status</label> <select class="form-control status" id="status" placeholder="Select Status"> <option value="pending">Pending</option> <option value="approved">Approved</option> <option value="in-progress">In Progress</option> <option value="complete">Complete</option> </select> </div> </div> </div> </div>');
+	$(".tasks").append('<div class="panel panel-info"> <div class="panel-heading"> <h4 class="panel-title pull-left"> <a data-toggle="collapse" href="#collapseTask'+num_tasks+'"> Task </a> </h4> <div class="col-md-2 pull-right text-right" style="padding: 0px;"> <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal"> <span class="glyphicon glyphicon-trash" style="margin: 0px;"></span> </button> </div> <div class="clearfix"></div> </div> <div id="collapseTask'+num_tasks+'" class="panel-collapse collapse in"> <div class="panel-body"> <div class="form-group"> <label for="process">Process</label> <select class="form-control process" id="process" placeholder="Select Process"> @foreach($processes as $process) <option value="{{$process->id}}">{{$process->name}}</option> @endforeach </select> </div> <div class="form-group"> <label for="equipment">Equipment</label> <select class="form-control equipment" id="equipment" placeholder="Select Equipment"> @if (count($processes) > 0) @foreach($processes[0]->equipment()->get() as $equipment) <option value="{{$equipment->id}}">{{$equipment->name}}</option> @endforeach @endif</select> </div> <div class="form-group"> <label for="duration">Duration</label> <input type="number" class="form-control duration" name="duration[]" id="duration" placeholder="Enter Duration" required> </div> <div class="form-group"> <label for="notes">Notes</label> <textarea class="form-control notes" rows="2" id="notes"></textarea> </div> <div class="form-group"> <label for="status">Status</label> <select class="form-control status" id="status" placeholder="Select Status"> <option value="pending">Pending</option> <option value="approved">Approved</option> <option value="in-progress">In Progress</option> <option value="complete">Complete</option> </select> </div> </div> </div> </div>');
 	num_tasks++;
 	updateEquipmentHandler();
 	$('#projectForm').bootstrapValidator('addField', $("input[name='duration[]']"));
 });
 
+$(".equipment, .duration, .status").change(function(){
+	updateTaskName($(this).closest(".panel"));
+});
+
+function updateTaskName(panel){
+	$(panel).find('h4 a').text($(panel).find('.process').find(':selected').text() + " (" + $(panel).find('.equipment').find(':selected').text() + ") - " + $(panel).find('.duration').val() + " hours - " + $(panel).find('.status').find(':selected').text());
+}
+
 function updateEquipmentHandler(){
 	$(".process").change(function(){
 		var self = $(this);
 		$(this).parent().parent().find('.equipment').html('');
-		console.log(self.parent().parent().find('.equipment'));
 		$.each(equipment[$(this).val()], function(index, element){
-			self.parent().parent().find('.equipment').append('<option value="'+element.id+'">'+element.name+'</option>');
+			if (index == 0){
+				self.parent().parent().find('.equipment').append('<option value="'+element.id+'" selected>'+element.name+'</option>');
+			}else{
+				self.parent().parent().find('.equipment').append('<option value="'+element.id+'">'+element.name+'</option>');
+			}
 		});
+		updateTaskName($(this).closest(".panel"));
 	});
+}
+
+function createProject(schedule){
+	$("#projectForm").data('bootstrapValidator').validate();
+	if($("#projectForm").data('bootstrapValidator').isValid()){
+    	var formData = {};
+    	formData.project = {};
+    	formData['add_to_schedule'] = schedule;
+    	formData['project']['description'] = $("#description").val();
+    	formData['project']['docket'] = $("#docket").val();
+    	formData['project']['sheets'] = $("#sheets").val();
+    	formData['project']['stock'] = $("#stock").val();
+    	formData['project']['customer_id'] = $("#customer").val();
+    	formData['project']['notes'] = $("#notes").val();
+    	formData['project']['user_id'] = $("#rep").val();
+    	formData['project']['due_date'] = $("#duedate").val();
+    	formData.tasks = {};
+    	$.each($(".tasks").find(".panel"), function(index, element){
+    		formData['tasks'][index] = {};
+    		formData['tasks'][index]['process_id'] = $(element).find(".process").val();
+    		formData['tasks'][index]['equipment_id'] = $(element).find(".equipment").val();
+    		formData['tasks'][index]['duration'] = $(element).find(".duration").val();
+    		formData['tasks'][index]['status'] = $(element).find(".status").val();
+    		formData['tasks'][index]['notes'] = $(element).find(".notes").val();
+    	});
+  		$.ajax({
+	        url: root+'/project/save',
+	        type: 'POST',
+	        data: formData,
+	        success: function(data) {
+	        	window.location.href = "{{action('ProjectController@editor')}}";
+	        }
+	    });
+	}
 }
 
 $('#myModal').on('shown.bs.modal', function (e) {

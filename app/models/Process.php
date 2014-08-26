@@ -14,4 +14,14 @@ class Process extends Eloquent {
         return $this->hasMany('ProcessEquipment');
     }
 
+    public function getNumTasks()
+    {
+    	$numTasks = 0;
+    	foreach($this->equipment()->get() as $equipment){
+    		$numTasks += count($equipment->unscheduledTasks());
+    	}
+
+    	return $numTasks;
+    }
+
 }

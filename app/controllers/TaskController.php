@@ -91,9 +91,9 @@ class TaskController extends \BaseController {
 		        	$new_event['id'] = $event->id;
 		        	$new_event['start'] = $event->start_date;
 		        	$new_event['end'] = $event->end_date;
-		        	$new_event['title'] = $event->description;
+		        	$new_event['title'] = $event->project()->first()->description;
 		        	$new_event['userId'] = $this->getEquipmentOrderId($event->equipment_id);
-		        	$new_event['colour'] = User::find($event->user_id)->colour;
+		        	$new_event['colour'] = User::find($event->project()->first()->user_id)->colour;
 		        	$tasks['events'][] = $new_event;
 		        }
 	        }

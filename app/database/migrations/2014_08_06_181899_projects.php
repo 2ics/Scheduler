@@ -24,6 +24,8 @@ class Projects extends Migration {
 			$table->string('sheets')->nullable();
 			$table->string('due_date')->nullable();
 			$table->string('stock')->nullable();
+			$table->string('notes')->nullable();
+			$table->boolean('sent_to_schedule');
 			$table->timestamps();
 			$table->softDeletes();
 

@@ -23,6 +23,9 @@ class Tasks extends Migration {
 			$table->foreign('equipment_id')->references('id')->on('equipment')->onDelete('cascade');
 			$table->double('duration')->nullable();
 			$table->string('status')->nullable();
+			$table->string('notes')->nullable();
+			$table->string('start_date')->nullable();
+			$table->string('end_date')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 

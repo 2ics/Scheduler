@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title> 
+			Scheduler - 
 			@section('title') 
 			@show 
 		</title>

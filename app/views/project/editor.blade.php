@@ -26,6 +26,7 @@
 		            <th>All Tasks Scheduled</th>
 		            <th>Total tasks</th>
                 <th>Status</th>
+                <th>Notes</th>
                 <th>Modify</th>
 		        </tr>
 		    </thead>
@@ -47,6 +48,24 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary delete">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Schedule Project</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to add this project to the scheduler?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary schedule">Add to Schedule</button>
       </div>
     </div>
   </div>
@@ -76,6 +95,7 @@
           { "data": "scheduled", },
           { "data": "total_tasks", },
           { "data": "status", },
+          { "data": "notes", },
           { "data": "modify", "width": '60px'}
       ],
       "tableTools": {
@@ -114,5 +134,35 @@
           ]
       }
   } );
+$('#myModal').on('shown.bs.modal', function (e) {
+  var self = $(this);
+  $(this).find('.delete').click(function(){
+    $.ajax({
+        url: root+'/project/delete/'+$(e.relatedTarget).data('project'),
+        type: 'GET',
+        success: function(data) {
+          window.location.href = "{{action('ProjectController@editor')}}";
+        }
+    });
+  });
+});
+$('#myModal').on('hidden.bs.modal', function (e) {
+  $(this).find('.delete').unbind('click');
+});
+$('#scheduleModal').on('shown.bs.modal', function (e) {
+  var self = $(this);
+  $(this).find('.schedule').click(function(){
+    $.ajax({
+        url: root+'/project/schedule/'+$(e.relatedTarget).data('project'),
+        type: 'GET',
+        success: function(data) {
+          window.location.href = "{{action('ProjectController@editor')}}";
+        }
+    });
+  });
+});
+$('#scheduleModal').on('hidden.bs.modal', function (e) {
+  $(this).find('.schedule').unbind('click');
+});
 </script>
 @stop

@@ -13,4 +13,14 @@ class ProcessEquipment extends Eloquent {
     {
         return $this->hasOne('Process');
     }
+
+    public function tasks()
+    {
+    	return Task::where('equipment_id', '=', $this->id)->get();
+    }
+
+    public function unscheduledTasks()
+    {
+    	return Task::where('equipment_id', '=', $this->id)->whereNull('start_date')->whereNull('end_date')->get();
+    }
 }

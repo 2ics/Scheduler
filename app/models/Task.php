@@ -11,8 +11,19 @@ class Task extends Eloquent {
 	
 	protected $softDelete = true;
 	
-    public function customer()
+    public function project()
     {
         return $this->belongsTo('Project');
+    }
+
+    public function getCalendarUserId()
+    {
+        $all_equipment = Process::find(ProcessEquipment::where('id', '=', $this->equipment_id)->first()->process_id)->equipment()->get();
+
+        foreach ($all_equipment as $index => $equipment) {
+            if ($equipment->id == $this->equipment_id){
+                return $index;
+            }
+        }
     }
 }
