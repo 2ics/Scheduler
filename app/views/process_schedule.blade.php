@@ -32,7 +32,7 @@
                         <li class="list-group-item"><span class="glyphicon glyphicon-pencil text-primary"></span><a data-toggle="collapse" href="#collapse{{$process->id}}{{$equipment->id}}">{{$equipment->name}}<span class="badge pull-right">{{count($equipment->unscheduledTasks())}}</span></a>
                           <ul class="list-group collapse in" id="collapse{{$process->id}}{{$equipment->id}}">
                               @foreach($equipment->unscheduledTasks() as $task)
-                                <li class="list-group-item task" data-userid="{{$task->getCalendarUserId()}}" data-colour="{{User::find($task->project()->first()->user_id)->colour}}" data-title="{{$task->project()->first()->description}}" data-id="{{$task->id}}"><span class="glyphicon glyphicon-pencil text-primary"></span>
+                                <li class="list-group-item task" data-userid="{{$task->getCalendarUserId()}}" data-duration="{{$task->duration}}" data-colour="{{User::find($task->project()->first()->user_id)->colour}}" data-title="{{$task->project()->first()->description}}" data-description="{{$task->project()->first()->docket}}" data-id="{{$task->id}}"><span class="glyphicon glyphicon-pencil text-primary"></span>
                                     {{Project::find($task->project_id)->description}} - {{Project::find($task->project_id)->docket}} - {{Customer::find(Project::find($task->project_id)->customer_id)->name}}
                                 </li>
                               @endforeach
@@ -62,17 +62,34 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="rescheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Reschedule Task</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to reschedule this task?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary schedule">Reschedule</button>
+      </div>
+    </div>
+  </div>
+</div>
 @stop
 
 {{-- Javascript --}}
 @section('javascript')
   <script type="text/javascript">
-  (function($) {
-    users = Array();
-    $(document).ready(function() {
-      setup_calendar('{{$process_id}}');
-    });
-  })(jQuery);
+  var $calendar = null;
+  var users = Array();
+  $(document).ready(function() {
+    setup_calendar('{{$process_id}}');
+  });
 
   function setup_calendar(process_id) {
     $.ajax({
@@ -81,7 +98,7 @@
         dataType: 'json',
         success: function(data) {
           users = data;
-          var $calendar = $('#calendar').weekCalendar({
+          $calendar = $('#calendar').weekCalendar({
             timeslotsPerHour: 4,
             scrollToHourMillis : 0,
             height: function($calendar){
@@ -115,7 +132,7 @@
 
   function setup_tasks() {
     $( ".task" ).each(function(){
-      $(this).data('calEvent', {userId: $(this).data('userid'), colour: $(this).data('colour'), title: $(this).data('title'), id: $(this).data('id')});
+      $(this).data('calEvent', {userId: $(this).data('userid'), duration: $(this).data('duration'), colour: $(this).data('colour'), title: $(this).data('title'), id: $(this).data('id'), description: $(this).data('description')});
     });
     create_draggable_items();
   }
@@ -124,7 +141,7 @@
     $( ".task" ).draggable({
       helper: function(event){
         console.log($(event.target).data('calEvent'));
-        var temp_task = $('<div class="wc-cal-event ui-corner-all" style="margin-left:2px; width: '+$(".wc-day-column-inner").width()+';z-index: 1000;line-height: 15px; font-size: 13px; height: 60px; display: block; background-color: rgb(170, 170, 170);"><div class="wc-time ui-corner-top" style="border: 1px solid rgb(136, 136, 136); background-color: rgb(153, 153, 153);">'+$(event.target).data('calEvent').title+'<div class="wc-cal-event-delete ui-icon ui-icon-close"></div></div><div class="wc-title">'+$(event.target).data('calEvent').title+'</div><div class="ui-resizable-handle ui-resizable-s">=</div></div>');
+        var temp_task = $('<div class="wc-cal-event ui-corner-all" style="margin-left:-14px; width: '+$(".wc-day-column-inner").width()+';z-index: 1000;line-height: 15px; font-size: 13px; height: '+$calendar.data('weekCalendar').options.timeslotHeight * $(event.target).data('calEvent').duration+'px; display: block; background-color: rgb(170, 170, 170);"><div class="wc-time ui-corner-top" style="border: 1px solid rgb(136, 136, 136); background-color: rgb(153, 153, 153);">'+$(event.target).data('calEvent').title+'</div><div class="wc-title">'+$(event.target).data('calEvent').description+'</div><button type="button" class="btn btn-link btn-sm" style="position: absolute; bottom: 5px; right:5px; width: 1px;"><span class="glyphicon glyphicon-lock"></span></button><div class="ui-resizable-handle ui-resizable-s">=</div></div>');
         temp_task.data('calEvent', $(event.target).data('calEvent'));
         return temp_task;
       },
@@ -135,19 +152,24 @@
       appendTo: ".wc-grid-row-events .wc-full-height-column.wc-user-0",
       containment: [$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().top,$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-1").offset().top+1200],
       stop: function(event, ui){
-        console.log(ui);
-        // console.log($(event.target).data('draggable'));
-        // function update_task_count();
       },
       drag: function(event, ui){
-        // console.log($(ui.helper).data('calEvent').userId);
         $(event.target).data('draggable').containment = [$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().top,$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().left,$(".wc-grid-row-events .wc-full-height-column.wc-user-"+$(ui.helper).data('calEvent').userId).offset().top+1200];
       }
     });
   }
 
-  // function update_task_count() {
-
-  // }
+  function rescheduleHandler(){
+    $(".reschedule-btn").click(function(){
+      console.log($(this).data());
+      $.ajax({
+          url: root+'/task/reschedule/'+$(this).data('id'),
+          type: 'GET',
+          success: function(data) {
+            window.location.href = "{{action('ProjectController@editor')}}";
+          }
+      });
+    });
+  }
   </script>
 @stop

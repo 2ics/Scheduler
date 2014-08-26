@@ -10,7 +10,7 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-	
+
 Assets::add('planner'); 
 
 // Session Routes
@@ -77,7 +77,7 @@ Route::get('project/delete/{project_id}', 'ProjectController@delete');
 Route::get('project/getAll', 'ProjectController@getAll');
 Route::get('project/edit/{project_id}', 'ProjectController@edit');
 Route::get('project/schedule/{project_id}', 'ProjectController@schedule');
-
+Route::get('task/reschedule/{task_id}', 'TaskController@reschedule');
 
 Route::get('api/customers/all', 'CustomerController@allCustomers');
 Route::get('api/select/processes/all', 'TaskController@allProcessesSelect');

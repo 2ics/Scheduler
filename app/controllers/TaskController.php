@@ -1,74 +1,7 @@
 <?php
 
 class TaskController extends \BaseController {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function getTasks()
-	{
-		$tasks = Task::all();
-		$allTasks = array();
-			$counter = 0;
-		foreach ($tasks as $task){
-			foreach ($task['attributes'] as $index => $attribute){
-				if ($index == "due_date"){
-					$allTasks[$counter][$index] = "<div class='".$index."'>".date('d/m/Y', intval($attribute))."</div>";
-				}else if ($index == "customer_id"){
-					$allTasks[$counter]['customer'] = "<div class='customer'>".Customer::find($attribute)->name."</div>";
-				}else if ($index == "equipment_id"){
-					$allTasks[$counter]['equipment'] = "<div class='equipment'>".ProcessEquipment::find($attribute)->name."</div>";
-					$allTasks[$counter]['process'] = "<div class='process'>".Process::find(ProcessEquipment::find($attribute)->process_id)->name."</div>";
-				}else if ($index == "user_id"){
-					$allTasks[$counter]['user'] = "<div class='user'>".User::find($attribute)->first_name." " . User::find($attribute)->last_name ."</div>";
-				}else{
-					$allTasks[$counter][$index] = "<div class='".$index."'>".$attribute."</div>";
-				}
-			}
-			$counter++;
-		}
 
-		return Response::json(array('data' => $allTasks));
-	}
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function addTask()
-	{
-        if (Request::ajax()) {
-            $data = Input::all();
-
-           	$task = new Task;
-
-            foreach ($data as $index => $var){
-           		if(Schema::hasColumn('tasks', $index)){
-           			$task[$index] = $var;
-           		}
-            }
-
-           	$task->save();
-        }
-	}
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function editColumn()
-	{
-        if (Request::ajax()) {
-            $data = Input::all();
-
-            $task = Task::find($data['id']);
-
-	        $task[$data['field']] = $data['value'];
-
-            $task->save();
-        }
-	}
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -92,6 +25,8 @@ class TaskController extends \BaseController {
 		        	$new_event['start'] = $event->start_date;
 		        	$new_event['end'] = $event->end_date;
 		        	$new_event['title'] = $event->project()->first()->description;
+		        	$new_event['description'] = $event->project()->first()->docket;
+		        	$new_event['locked'] = true;
 		        	$new_event['userId'] = $this->getEquipmentOrderId($event->equipment_id);
 		        	$new_event['colour'] = User::find($event->project()->first()->user_id)->colour;
 		        	$tasks['events'][] = $new_event;
@@ -183,6 +118,7 @@ class TaskController extends \BaseController {
         	$process = Process::find($equipment->process_id);
         	$event['userId'] = $this->getEquipmentOrderId($event->equipment_id);
         	$event['colour'] = User::find($event->user_id)->colour;
+        	$event['description'] = User::find($event->user_id)->colour;
         	$event['customer'] = Customer::find($event->customer_id)->name;
         	$all_events[$process->name][$equipment->name][] = $event['attributes'];
         }
@@ -224,6 +160,18 @@ class TaskController extends \BaseController {
 		}
 
         return $data;
+	}
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function reschedule($id)
+	{
+		$task = Task::find($id);
+		$task->start_date = null;
+		$task->end_date = null;
+		$task->save();
 	}
 	/**
 	 * Display a listing of the resource.

@@ -220,7 +220,7 @@ function createProject(schedule){
 $('#myModal').on('shown.bs.modal', function (e) {
 	var self = $(this);
 	$(this).find('.delete').click(function(){
-		$(e.relatedTarget).closest('.panel-info').remove();
+		$(e.relatedTarget).closest('.panel').remove();
 		self.modal('hide');
 	});
 });

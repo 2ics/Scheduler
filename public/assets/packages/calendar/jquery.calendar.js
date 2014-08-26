@@ -65,7 +65,7 @@
         },
         switchDisplay: {},
         scrollToHourMillis: 500,
-        allowEventDelete: true,
+        allowEventDelete: false,
         allowCalEventOverlap: false,
         overlapEventsSeparate: false,
         totalEventsWidthPercentInOneColumn: 100,
@@ -79,7 +79,7 @@
           return true;
         },
         resizable: function(calEvent, element) {
-          return true;
+          return false;
         },
         eventClick: function(calEvent, element, dayFreeBusyManager, 
                                                       calendar, clickEvent) {
@@ -292,7 +292,7 @@
         self._renderCalendar();
         self._loadCalEvents();
         self._resizeCalendar();
-        self._scrollToHour(self.options.date.getHours(), true);
+        // self._scrollToHour(self.options.date.getHours(), true);
 
         if (this.options.resizeEvent) {
           $(window).unbind(this.options.resizeEvent);
@@ -1533,7 +1533,7 @@
           eventClass = calEvent.id ? 'wc-cal-event' : 'wc-cal-event wc-new-cal-event';
           eventHtml = '<div class=\"' + eventClass + ' ui-corner-all\" style="background-color: #'+calEvent.colour+'">';
           eventHtml += '<div class=\"wc-time ui-corner-top\" style="background-color: '+darkColour+'; border: 1px solid '+darkColour+'"></div>';
-          eventHtml += '<div class=\"wc-title\" style="background-color: #'+calEvent.colour+'"></div></div>';
+          eventHtml += '<div class=\"wc-title\" style="background-color: #'+calEvent.colour+'">'+calEvent.description+'<button type="button" data-id="'+calEvent.id+'" class="btn btn-link btn-sm lock-btn" style="position: absolute; top: 20px; right:5px; width: 1px;"><span class="glyphicon glyphicon-lock"></span></button></div></div>';
 
           $weekDay.each(function() {
             var $calEvent = $(eventHtml);
@@ -1562,6 +1562,13 @@
           }
           options.eventAfterRender(calEvent, $calEventList);
 
+          $(".lock-btn").click(function(){
+            var reschedule = $(this).closest('.wc-cal-event').append('<button type="button" data-id="'+calEvent.id+'" class="btn btn-link btn-sm reschedule-btn" style="position: absolute; top: 35px; right:5px; width: 1px;"><span class="glyphicon glyphicon-share-alt"></span></button>');
+            reschedule.data('calEvent', calEvent);
+            rescheduleHandler();
+            $(this).unbind('click');
+            $(this).remove();
+          });
           return $calEventList;
 
       },
