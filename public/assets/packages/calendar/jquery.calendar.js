@@ -1902,7 +1902,7 @@
       _addDraggableToCalEvent: function(calEvent, $calEvent) {
         var options = this.options;
         $calEvent.draggable({
-          handle: '.wc-time',
+          handle: '.wc-cal-event',
           containment: 'div.wc-user-'+calEvent.userId,
           // containment: 'div.wc-time-slots',
           snap: '.wc-day-column-inner',

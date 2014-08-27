@@ -94,13 +94,25 @@
 								<div class="panel panel-warning" data-task="{{$task->id}}">
 									<div class="panel-heading">
 										<h4 class="panel-title pull-left">
-											<a data-toggle="collapse" href="#collapseTask{{$task->id}}">{{Process::find($task->process_id)->name}} ({{ProcessEquipment::find($task->equipment_id)->name}}) - {{$task->duration}} hours - {{ucfirst($task->status)}}</a>
+											<a data-toggle="collapse" href="#collapseTask{{$task->id}}">
+											@if ($task->start_date != null && $task->end_date != null)
+											<img src="{{asset('/img/ON_schedule.png')}}" width="18" />
+											@endif
+											{{Process::find($task->process_id)->name}} ({{ProcessEquipment::find($task->equipment_id)->name}}) - {{$task->duration}} hours - {{ucfirst($task->status)}}<br />
+											</a>
 										</h4>
 										<div class="col-md-2 pull-right text-right" style="padding: 0px;">
 											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal">
 												<span class="glyphicon glyphicon-trash" style="margin: 0px;"></span>
 											</button>
 										</div>
+										@if ($task->start_date != null && $task->end_date != null)
+										<div class="row">
+											<div class="col-md-7">
+												<span style="padding-left: 23px;font-size: 11px;">{{date('l, F d, Y', substr($task->start_date, 0, 10))}}</span>
+											</div>
+										</div>
+										@endif
 										<div class="clearfix"></div>
 									</div>
 									<div id="collapseTask{{$task->id}}" class="panel-collapse collapse in">

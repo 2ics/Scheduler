@@ -21,7 +21,7 @@
 		            <th>Rep</th>
 		            <th>Input Date</th>
 		            <th>Due Date</th>
-		            <th>Completion Time</th>
+		            <th>Days to Complete</th>
 		            <th>Days Left</th>
 		            <th>Scheduled?</th>
 		            <th>Total tasks</th>
@@ -75,9 +75,23 @@
 {{-- Javascript --}}
 @section('javascript')
 <script>
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "num-html-pre": function ( a ) {
+            var x = String(a).replace( /<[\s\S]*?>/g, "" );
+            return parseFloat( x );
+        },
+     
+        "num-html-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "num-html-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+    } );
     t = $('#table_id').DataTable( {
       "dom": 'TCR<"clear">lfrtip',
-	  "pageLength": 10,
+	    "pageLength": 10,
       "ajax": { 
       	'url': root+"/project/getAll"
     	},
@@ -91,7 +105,7 @@
           { "data": "input_date", },
           { "data": "due_date", },
           { "data": "completion_time", },
-          { "data": "overdue", },
+          { "data": "overdue", type: 'num-html'},
           { "data": "scheduled", },
           { "data": "total_tasks", },
           { "data": "status", },

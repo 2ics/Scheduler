@@ -253,7 +253,7 @@ table.wc-time-slots {
     font-weight: bold;
 }
 
-.wc-container .ui-draggable .wc-time {
+.wc-container .ui-draggable {
     cursor: move;
 }
 

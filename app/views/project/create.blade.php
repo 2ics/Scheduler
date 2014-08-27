@@ -211,7 +211,7 @@ function createProject(schedule){
 	        type: 'POST',
 	        data: formData,
 	        success: function(data) {
-	        	window.location.href = "{{action('ProjectController@editor')}}";
+	        	console.log(data);
 	        }
 	    });
 	}

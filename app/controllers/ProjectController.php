@@ -50,6 +50,12 @@ class ProjectController extends BaseController {
         	$completiontime = strtotime($project->due_date) - strtotime($project->created_at);
         	$now = time();
         	$overdue = strtotime($project->due_date) - $now;
+        	$completed = count($project->tasks()->where('status', '<>', 'complete')->get()) > 0 ? false : true;
+        	if ($completed){
+        		$overdue = 0;
+        	}else{
+        		$overdue = (floor($overdue/(60*60*24)) < 0) ? "<span style='color: #FF0000; font-weight:bold;'>".floor($overdue/(60*60*24))."</span>" : floor($overdue/(60*60*24));
+        	}
 			$allProjects[] = array(
 				'description' => $project->description,
 				'docket'		=> $project->docket,
@@ -61,10 +67,10 @@ class ProjectController extends BaseController {
 				'input_date'	=> $project->created_at->format('d-m-Y'),
 				'due_date'		=> $project->due_date,
 				'completion_time' => floor($completiontime/(60*60*24))+1 ." days",
-				'overdue'		=> (floor($overdue/(60*60*24)) < 0) ? "<span style='color: #FF0000; font-weight:bold;'>".floor($overdue/(60*60*24))."</span>" : floor($overdue/(60*60*24)),
+				'overdue'		=> $overdue,
 				'scheduled'		=> ($project->sent_to_schedule) ? "<img src='".asset('/img/ON_schedule.png')."' />" : '<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#scheduleModal"data-project="'.$project->id.'"> <img src="'.asset('/img/OFF_schedule.png').'" /></button>',
 				'total_tasks'	=> count($project->tasks()->get()),
-				'status'		=> count($project->tasks()->where('status', '<>', 'complete')) > 0 ? "In Progress" : "Completed",
+				'status'		=> count($project->tasks()->where('status', '<>', 'complete')->get()) > 0 ? "In Progress" : "Completed",
 				'modify'		=> '<a href="'.action("ProjectController@edit", array($project->id)).'"><button type="button" class="btn btn-primary btn-sm" style="margin-right:5px;"><span class="glyphicon glyphicon-pencil"></span></button></a><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-project="'.$project->id.'" data-target="#myModal"><span class="glyphicon glyphicon-trash"></span></button>'
 			);
 		}
@@ -94,7 +100,11 @@ class ProjectController extends BaseController {
 				$project = new Project;
 			}
 			if (isset($data['add_to_schedule'])){
-				$project->sent_to_schedule = $data['add_to_schedule'];
+				if ($data['add_to_schedule']){
+					$project->sent_to_schedule = true;
+				}else{
+					$project->sent_to_schedule = false;
+				}
 			}
 			foreach($data['project'] as $field => $value){
            		if(Schema::hasColumn('projects', $field)){
@@ -128,7 +138,11 @@ class ProjectController extends BaseController {
 
 	public function delete($id)
 	{
-		Project::find($id)->delete();
+		$project = Project::find($id);
+
+		$project->tasks()->delete();
+
+		$project->delete();
 	}
 
 	public function schedule($id)
