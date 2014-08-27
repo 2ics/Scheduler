@@ -23,7 +23,7 @@
 		            <th>Due Date</th>
 		            <th>Completion Time</th>
 		            <th>Overdue</th>
-		            <th>All Tasks Scheduled</th>
+		            <th>Scheduled?</th>
 		            <th>Total tasks</th>
                 <th>Status</th>
                 <th>Notes</th>

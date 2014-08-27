@@ -78,6 +78,7 @@ Route::get('project/getAll', 'ProjectController@getAll');
 Route::get('project/edit/{project_id}', 'ProjectController@edit');
 Route::get('project/schedule/{project_id}', 'ProjectController@schedule');
 Route::get('task/reschedule/{task_id}', 'TaskController@reschedule');
+Route::get('task/individual/{task_id}', 'TaskController@individual');
 
 Route::get('api/customers/all', 'CustomerController@allCustomers');
 Route::get('api/select/processes/all', 'TaskController@allProcessesSelect');

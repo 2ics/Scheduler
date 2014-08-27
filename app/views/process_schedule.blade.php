@@ -17,22 +17,21 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span class="glyphicon glyphicon-folder-close">
-                    </span>Tasks</a>
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="font-size: 19px;"><img src="{{asset('/img/task.png')}}" style="padding-right: 10px;" />Tasks</a>
                 </h4>
               </div>
               <div id="collapseOne" class="panel-collapse collapse in">
                 <ul class="list-group">
                   @foreach($processes as $process)
                   @if($process->getNumTasks() > 0)
-                  <li class="list-group-item"><span class="glyphicon glyphicon-pencil text-primary"></span><a data-toggle="collapse" href="#collapse{{$process->id}}">{{$process->name}}<span class="badge pull-right">{{$process->getNumTasks()}}</span></a>
+                  <li class="list-group-item"><img src="{{asset('/img/process.png')}}" style="padding-right: 10px;"/><a data-toggle="collapse" href="#collapse{{$process->id}}" style="font-size: 19px;">{{$process->name}}<span class="badge pull-right">{{$process->getNumTasks()}}</span></a>
                     <ul class="list-group collapse {{($process->id == $process_id) ? 'in' : ''}}" id="collapse{{$process->id}}">
                       @foreach($process->equipment()->get() as $equipment)
                         @if (count($equipment->unscheduledTasks()) > 0)
-                        <li class="list-group-item"><span class="glyphicon glyphicon-pencil text-primary"></span><a data-toggle="collapse" href="#collapse{{$process->id}}{{$equipment->id}}">{{$equipment->name}}<span class="badge pull-right">{{count($equipment->unscheduledTasks())}}</span></a>
+                        <li class="list-group-item"><img src="{{asset('/img/equipment.png')}}" style="padding-right: 10px;"/><a data-toggle="collapse" href="#collapse{{$process->id}}{{$equipment->id}}" style="font-size: 19px;">{{$equipment->name}}<span class="badge pull-right">{{count($equipment->unscheduledTasks())}}</span></a>
                           <ul class="list-group collapse in" id="collapse{{$process->id}}{{$equipment->id}}">
                               @foreach($equipment->unscheduledTasks() as $task)
-                                <li class="list-group-item {{($process->id == $process_id) ? 'task' : ''}}" data-userid="{{$task->getCalendarUserId()}}" data-duration="{{$task->duration}}" data-colour="{{User::find($task->project()->first()->user_id)->colour}}" data-title="{{$task->project()->first()->description}}" data-description="{{$task->project()->first()->docket}}<br />{{$task->project()->first()->customer()->first()->name}}<br />{{$task->notes}}<br />{{$task->status}}" data-id="{{$task->id}}"><span class="glyphicon glyphicon-pencil text-primary"></span>
+                                <li style="padding-left:0px;" class="list-group-item {{($process->id == $process_id) ? 'task' : ''}}" data-userid="{{$task->getCalendarUserId()}}" data-duration="{{$task->duration}}" data-hasnote="{{($task->notes == "") ? false : true}}" data-colour="{{User::find($task->project()->first()->user_id)->colour}}" data-title="{{$task->project()->first()->description}}" data-description="{{$task->project()->first()->docket}}<br />{{$task->project()->first()->customer()->first()->name}}<br />{{$task->notes}}<br />{{strtoupper($task->status)}}" data-id="{{$task->id}}"><img src="{{asset('/img/task.png')}}" style="padding-right: 10px;" />
                                     {{Project::find($task->project_id)->description}} - {{Project::find($task->project_id)->docket}} - {{Customer::find(Project::find($task->project_id)->customer_id)->name}}
                                 </li>
                               @endforeach
@@ -54,20 +53,27 @@
   </div>
   <div class="col-md-9">
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-6">
     <ul class="nav nav-tabs" role="tablist">
       @foreach ($processes as $index => $process)
           <li {{ (Request::is('process/'.$process->name) ? 'class="active"' : '') }}><a href="{{action('HomeController@scheduleProcess', array('process_name' => $process->name))}}">{{$process->name}}</a></li>
       @endforeach
     </ul>
     </div>
+    <div class="col-md-3 text-right">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default prev-day"><span class="glyphicon glyphicon-chevron-left" style="margin-right:0px;"></span></button>
+        <button type="button" class="btn btn-default today">Today</button>
+        <button type="button" class="btn btn-default next-day"><span class="glyphicon glyphicon-chevron-right" style="margin-right:0px;"></span></button>
+      </div>
+    </div>
     <div class="col-md-3">
       <div class="row">
-      <div class="col-md-2" style="padding:0px;text-align:center;">
-        <span style="font-size: 20px;margin:0px;" class="glyphicon glyphicon-calendar"></span>
-      </div>
-      <div class="col-md-10" style="padding-left:0px;">
-        <input type="text" class="form-control" value="{{date('d/m/Y', time())}}" id="datepicker">
+      <div class="col-md-12" style="padding-left:0px;">
+        <div class="input-group">
+          <span class="input-group-addon"><span style="font-size: 14px;margin:0px;" class="glyphicon glyphicon-calendar"></span></span>
+          <input type="text" class="form-control" value="{{date('d/m/Y', time())}}" id="datepicker">
+        </div>
       </div>
       </div>
     </div>
@@ -76,23 +82,8 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="rescheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Reschedule Task</h4>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to reschedule this task?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary schedule">Reschedule</button>
-      </div>
-    </div>
-  </div>
+<div id="dialog" title="View Task">
+
 </div>
 @stop
 
@@ -116,7 +107,7 @@
             timeslotsPerHour: 4,
             scrollToHourMillis : 0,
             height: function($calendar){
-              return $(window).height() - $('h1').outerHeight(true) - 50;
+              return $(window).height() - $('h1').outerHeight(true) - 200;
             },
             data: function(start, end, callback) {
               $.ajax({
@@ -144,14 +135,45 @@
           $('#datepicker').change(function(){
             $calendar.weekCalendar("gotoDate", $(this).val());
           });
+          $('.prev-day').click(function(){
+            $calendar.weekCalendar("prev");
+          });
+          $('.next-day').click(function(){
+            $calendar.weekCalendar("next");
+          });
+          $('.today').click(function(){
+            $calendar.weekCalendar("today");
+          });
           setup_tasks();
         }
       });
   }
 
+  function load_task(id, title) {
+    $.ajax({
+      url: root+'/task/individual/'+id,
+      type: 'GET',
+      dataType: 'text',
+      success: function(data) {
+        $("#dialog").html(data);
+        $( "#dialog" ).dialog({
+          modal: true,
+          minWidth: 500,
+          draggable: false,
+          title: title,
+          buttons: {
+            Close: function() {
+              $( this ).dialog( "close" );
+            }
+          }
+        });
+      }
+    });
+  }
+
   function setup_tasks() {
     $( ".task" ).each(function(){
-      $(this).data('calEvent', {userId: $(this).data('userid'), duration: $(this).data('duration'), colour: $(this).data('colour'), title: $(this).data('title'), id: $(this).data('id'), description: $(this).data('description')});
+      $(this).data('calEvent', {userId: $(this).data('userid'), duration: $(this).data('duration'), hasnote: $(this).data('hasnote'), colour: $(this).data('colour'), title: $(this).data('title'), id: $(this).data('id'), description: $(this).data('description')});
     });
     create_draggable_items();
   }
@@ -198,6 +220,9 @@
     });
     $(".edit-btn").click(function(){
       window.location.href = root+'/project/edit/'+$(this).data('project_id');
+    });
+    $(".view-btn").click(function(){
+      load_task($(this).parent().data('calEvent').id, $(this).parent().data('calEvent').title);
     });
   }
   </script>

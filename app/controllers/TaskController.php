@@ -26,8 +26,9 @@ class TaskController extends \BaseController {
 		        	$new_event['start'] = $event->start_date;
 		        	$new_event['end'] = $event->end_date;
 		        	$new_event['title'] = $event->project()->first()->description;
-		        	$new_event['description'] = $event->project()->first()->docket."<br />".$event->project()->first()->customer()->first()->name."<br />".$event->notes."<br />".$event->status;
+		        	$new_event['description'] = $event->project()->first()->docket."<br />".$event->project()->first()->customer()->first()->name."<br />".strtoupper($event->status);
 		        	$new_event['locked'] = true;
+		        	$new_event['hasnote'] = (strlen($event->notes) > 0) ? true : false;
 		        	$new_event['userId'] = $this->getEquipmentOrderId($event->equipment_id);
 		        	$new_event['colour'] = User::find($event->project()->first()->user_id)->colour;
 		        	$tasks['events'][] = $new_event;
@@ -45,6 +46,15 @@ class TaskController extends \BaseController {
 	public function allProcesses()
 	{
         return json_decode(Process::all()->toJson());
+	}
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function individual($id)
+	{
+		return View::make('task')->with('task', Task::find($id))->with('project', Project::find(Task::find($id)->project_id));
 	}
 
 	/**

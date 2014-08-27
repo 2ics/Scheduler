@@ -49,14 +49,14 @@
         timeSeparator: ' to ',
         startParam: 'start',
         endParam: 'end',
-        businessHours: {start: 8, end: 18, limitDisplay: false},
+        businessHours: {start: 0, end: 0, limitDisplay: false},
         newEventText: 'New Event',
         timeslotHeight: 20,
         defaultEventLength: 2,
         timeslotsPerHour: 4,
         minDate: null,
         maxDate: null,
-        showHeader: true,
+        showHeader: false,
         buttons: true,
         buttonText: {
           today: 'today',
@@ -1534,8 +1534,24 @@
                       .data('id', calEvent.id)
                       .addClass("btn btn-link btn-sm lock-btn")
                       .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
-          var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('margin', '0px');
+          var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('color', '#000000').css('margin', '0px');
           lockBtn.append(lockIcon);
+          
+          var viewBtn = $('<button/>')
+                      .attr("type", "button")
+                      .data('id', calEvent.id)
+                      .addClass("btn btn-link btn-sm view-btn")
+                      .css('padding', '0px').css('position', 'absolute').css('left', '5px').css('bottom', '0px');
+          var viewIcon = $('<span/>').addClass("glyphicon glyphicon-eye-open").css('color', '#000000').css('margin', '0px');
+          viewBtn.append(viewIcon);
+          
+          var noteBtn = $('<button/>')
+                      .attr("type", "button")
+                      .data('id', calEvent.id)
+                      .addClass("btn btn-link btn-sm")
+                      .css('padding', '0px').css('position', 'absolute').css('left', '25px').css('bottom', '0px');
+          var noteIcon = $('<span/>').addClass("glyphicon glyphicon-comment").css('color', '#000000').css('margin', '0px');
+          noteBtn.append(noteIcon);
 
           eventClass = calEvent.id ? 'wc-cal-event' : 'wc-cal-event wc-new-cal-event';
           eventHtml = '<div class=\"' + eventClass + ' ui-corner-all\" style="background-color: #'+calEvent.colour+';">';
@@ -1545,6 +1561,8 @@
           $weekDay.each(function() {
             var $calEvent = $(eventHtml);
             $calEvent.append(lockBtn);
+            $calEvent.append(viewBtn);
+            $calEvent.append(noteBtn);
             $modifiedEvent = options.eventRender(calEvent, $calEvent);
             $calEvent = $modifiedEvent ? $modifiedEvent.appendTo($(this)) : $calEvent.appendTo($(this));
             $calEvent.css({lineHeight: (options.textSize + 2) + 'px', fontSize: options.textSize + 'px'});
@@ -1569,6 +1587,7 @@
           //   self._addDraggableToCalEvent(calEvent, $calEventList);
           // }
           options.eventAfterRender(calEvent, $calEventList);
+          eventIconHandler();
           $(".lock-btn").click(function(){
             self._addDraggableToCalEvent($(this).closest('.wc-cal-event').data('calEvent'), $(this).closest('.wc-cal-event'));
             var rescheduleBtn = $('<button/>')
@@ -1576,7 +1595,7 @@
                         .data('id', calEvent.id)
                         .addClass("btn btn-link btn-sm reschedule-btn")
                         .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
-            var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-share-alt").css('margin', '0px');
+            var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-share-alt").css('color', '#000000').css('margin', '0px');
             rescheduleBtn.append(rescheduleIcon);
             var editBtn = $('<button/>')
                         .attr("type", "button")
@@ -1584,14 +1603,14 @@
                         .data('project_id', calEvent.project_id)
                         .addClass("btn btn-link btn-sm edit-btn")
                         .css('padding', '0px').css('position', 'absolute').css('right', '20px').css('bottom', '0px');
-            var editIcon = $('<span/>').addClass("glyphicon glyphicon-pencil").css('margin', '0px');
+            var editIcon = $('<span/>').addClass("glyphicon glyphicon-pencil").css('color', '#000000').css('margin', '0px');
             editBtn.append(editIcon);
             $(this).closest('.wc-cal-event').append(rescheduleBtn);
             $(this).closest('.wc-cal-event').append(editBtn);
             rescheduleBtn.data('calEvent', calEvent);
             editBtn.data('calEvent', calEvent);
-            eventIconHandler();
             $(this).unbind('click');
+            eventIconHandler();
             $(this).remove();
           });
           var lockBtn = $('<button/>')
@@ -2119,19 +2138,20 @@
        * Disable text selection of the elements in different browsers
        */
       _disableTextSelect: function($elements) {
-          $elements.each(function() {
-            if ($.browser.mozilla) {//Firefox
-                $(this).css('MozUserSelect', 'none');
-            } else if ($.browser.msie) {//IE
-                $(this).bind('selectstart', function() {
-                  return false;
-                });
-            } else {//Opera, etc.
-                $(this).mousedown(function() {
-                  return false;
-                });
-            }
-          });
+          // $elements.each(function() {
+          //   if ($.browser.mozilla) {//Firefox
+          //       $(this).css('MozUserSelect', 'none');
+          //   } else if ($.browser.msie) {//IE
+          //       $(this).bind('selectstart', function() {
+          //         return false;
+          //       });
+          //   } else {//Opera, etc.
+          //       $(this).mousedown(function() {
+          //         return false;
+          //       });
+          //   }
+          // });
+          return false;
       },
 
       /*
