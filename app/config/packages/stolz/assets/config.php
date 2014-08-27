@@ -69,7 +69,6 @@ return array(
 		                'stylesheets/main/bootstrap.min.css',
 		                'stylesheets/main/justified-nav.css',
 		                'stylesheets/main/breadcrumbs.css',
-		                'stylesheets/main/main.css',
 		                'stylesheets/main/basic.css',
 		                'stylesheets/main/bootstrapValidator.min.css',
 		                'stylesheets/main/chosen.min.css',

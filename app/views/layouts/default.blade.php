@@ -43,6 +43,7 @@
 	        </div>
 	        <div class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
+				<li ><img src="{{asset('/img/zen_logo.png')}}" class="img-responsive" /></li>
 				@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))@endif
 				<li {{ (Request::is('project/create') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@create') }}">{{trans('pages.create')}}</a></li>
 
@@ -68,8 +69,7 @@
 		<!-- Container -->
 		<div class="container">
 			<div class="row" style="margin-bottom: 15px;">
-				<div class="col-md-6"><img src="{{asset('/img/zen_logo.png')}}" class="img-responsive" /></div>
-				<div class="col-md-6 text-right"><h2 style="margin:0px; padding: 0px;">{{date('l, F d, Y', time())}}</h2></div>
+				<div class="col-md-12 text-right"><h2 style="margin:0px; padding: 0px;">{{date('l, F d, Y', time())}}</h2></div>
 			</div>
 			<!-- Notifications -->
 			@include('layouts/notifications')

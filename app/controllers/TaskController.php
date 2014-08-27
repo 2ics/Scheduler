@@ -22,10 +22,11 @@ class TaskController extends \BaseController {
 	        	if (ProcessEquipment::find($event->equipment_id)->process_id == $process_id){
 		        	$new_event = array();
 		        	$new_event['id'] = $event->id;
+		        	$new_event['project_id'] = $event->project_id;
 		        	$new_event['start'] = $event->start_date;
 		        	$new_event['end'] = $event->end_date;
 		        	$new_event['title'] = $event->project()->first()->description;
-		        	$new_event['description'] = $event->project()->first()->docket;
+		        	$new_event['description'] = $event->project()->first()->docket."<br />".$event->project()->first()->customer()->first()->name."<br />".$event->notes."<br />".$event->status;
 		        	$new_event['locked'] = true;
 		        	$new_event['userId'] = $this->getEquipmentOrderId($event->equipment_id);
 		        	$new_event['colour'] = User::find($event->project()->first()->user_id)->colour;

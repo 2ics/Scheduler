@@ -70,7 +70,7 @@
         overlapEventsSeparate: false,
         totalEventsWidthPercentInOneColumn: 100,
         readonly: false,
-        allowEventCreation: true,
+        allowEventCreation: false,
         hourLine: true,
         deletable: function(calEvent, element) {
           return true;
@@ -1190,7 +1190,6 @@
         * load calendar events for the week based on the date provided
         */
       _loadCalEvents: function(dateWithinWeek) {
-
           var date, weekStartDate, weekEndDate, $weekDayColumns;
           var self = this;
           var options = this.options;
@@ -1530,13 +1529,22 @@
           var lightColour = calEvent.colour;
           var darkColour = self.ColorLuminance("#"+lightColour, -0.4);
 
+          var lockBtn = $('<button/>')
+                      .attr("type", "button")
+                      .data('id', calEvent.id)
+                      .addClass("btn btn-link btn-sm lock-btn")
+                      .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
+          var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('margin', '0px');
+          lockBtn.append(lockIcon);
+
           eventClass = calEvent.id ? 'wc-cal-event' : 'wc-cal-event wc-new-cal-event';
-          eventHtml = '<div class=\"' + eventClass + ' ui-corner-all\" style="background-color: #'+calEvent.colour+'">';
-          eventHtml += '<div class=\"wc-time ui-corner-top\" style="background-color: '+darkColour+'; border: 1px solid '+darkColour+'"></div>';
-          eventHtml += '<div class=\"wc-title\" style="background-color: #'+calEvent.colour+'">'+calEvent.description+'<button type="button" data-id="'+calEvent.id+'" class="btn btn-link btn-sm lock-btn" style="position: absolute; top: 20px; right:5px; width: 1px;"><span class="glyphicon glyphicon-lock"></span></button></div></div>';
+          eventHtml = '<div class=\"' + eventClass + ' ui-corner-all\" style="background-color: #'+calEvent.colour+';">';
+          eventHtml += '<div class=\"wc-time ui-corner-top\" style="background-color: '+darkColour+'; border: 1px solid '+darkColour+';font-size: 9px;line-height: 10px;"></div>';
+          eventHtml += '<div class=\"wc-title\" style="background-color: #'+calEvent.colour+';font-size: 9px;line-height: 10px;">'+calEvent.description+'</div></div>';
 
           $weekDay.each(function() {
             var $calEvent = $(eventHtml);
+            $calEvent.append(lockBtn);
             $modifiedEvent = options.eventRender(calEvent, $calEvent);
             $calEvent = $modifiedEvent ? $modifiedEvent.appendTo($(this)) : $calEvent.appendTo($(this));
             $calEvent.css({lineHeight: (options.textSize + 2) + 'px', fontSize: options.textSize + 'px'});
@@ -1557,18 +1565,42 @@
           if (!options.readonly && options.resizable(calEvent, $calEventList)) {
             self._addResizableToCalEvent(calEvent, $calEventList, $weekDay);
           }
-          if (!options.readonly && options.draggable(calEvent, $calEventList)) {
-            self._addDraggableToCalEvent(calEvent, $calEventList);
-          }
+          // if (!options.readonly && options.draggable(calEvent, $calEventList)) {
+          //   self._addDraggableToCalEvent(calEvent, $calEventList);
+          // }
           options.eventAfterRender(calEvent, $calEventList);
-
           $(".lock-btn").click(function(){
-            var reschedule = $(this).closest('.wc-cal-event').append('<button type="button" data-id="'+calEvent.id+'" class="btn btn-link btn-sm reschedule-btn" style="position: absolute; top: 35px; right:5px; width: 1px;"><span class="glyphicon glyphicon-share-alt"></span></button>');
-            reschedule.data('calEvent', calEvent);
-            rescheduleHandler();
+            self._addDraggableToCalEvent($(this).closest('.wc-cal-event').data('calEvent'), $(this).closest('.wc-cal-event'));
+            var rescheduleBtn = $('<button/>')
+                        .attr("type", "button")
+                        .data('id', calEvent.id)
+                        .addClass("btn btn-link btn-sm reschedule-btn")
+                        .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
+            var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-share-alt").css('margin', '0px');
+            rescheduleBtn.append(rescheduleIcon);
+            var editBtn = $('<button/>')
+                        .attr("type", "button")
+                        .data('id', calEvent.id)
+                        .data('project_id', calEvent.project_id)
+                        .addClass("btn btn-link btn-sm edit-btn")
+                        .css('padding', '0px').css('position', 'absolute').css('right', '20px').css('bottom', '0px');
+            var editIcon = $('<span/>').addClass("glyphicon glyphicon-pencil").css('margin', '0px');
+            editBtn.append(editIcon);
+            $(this).closest('.wc-cal-event').append(rescheduleBtn);
+            $(this).closest('.wc-cal-event').append(editBtn);
+            rescheduleBtn.data('calEvent', calEvent);
+            editBtn.data('calEvent', calEvent);
+            eventIconHandler();
             $(this).unbind('click');
             $(this).remove();
           });
+          var lockBtn = $('<button/>')
+                      .attr("type", "button")
+                      .data('id', calEvent.id)
+                      .addClass("btn btn-link btn-sm lock-btn")
+                      .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
+          var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('margin', '0px');
+          lockBtn.append(lockIcon);
           return $calEventList;
 
       },
@@ -1592,7 +1624,6 @@
           c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
           rgb += ("00"+c).substr(c.length);
         }
-        console.log(rgb);
 
         return rgb;
       },
@@ -1977,7 +2008,8 @@
      this.options.deletable(calEvent,$calEvent)) {
         suffix = '<div class="wc-cal-event-delete ui-icon ui-icon-close"></div>';
     }
-          $calEvent.find('.wc-time').html(this.options.eventHeader(calEvent, this.element) + suffix);
+          $calEvent.find('.wc-time').html(calEvent.title);
+          // $calEvent.find('.wc-time').html(this.options.eventHeader(calEvent, this.element) + suffix);
           // $calEvent.find('.wc-title').html(this.options.eventBody(calEvent, this.element));
           $calEvent.data('calEvent', calEvent);
           this.options.eventRefresh(calEvent, $calEvent);
