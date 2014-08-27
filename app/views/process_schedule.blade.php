@@ -9,61 +9,23 @@
 {{-- Content --}}
 @section('content')
 <div class="row" id="calendar-row">
-  <div class="col-md-3">
-<div class="container">
-      <div class="row">
-        <div class="col-sm-3 col-md-3">
-          <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="font-size: 19px;"><img src="{{asset('/img/task.png')}}" style="padding-right: 10px;" />Tasks</a>
-                </h4>
-              </div>
-              <div id="collapseOne" class="panel-collapse collapse in">
-                <ul class="list-group">
-                  @foreach($processes as $process)
-                  @if($process->getNumTasks() > 0)
-                  <li class="list-group-item"><img src="{{asset('/img/process.png')}}" style="padding-right: 10px;"/><a data-toggle="collapse" href="#collapse{{$process->id}}" style="font-size: 19px;">{{$process->name}}<span class="badge pull-right">{{$process->getNumTasks()}}</span></a>
-                    <ul class="list-group collapse {{($process->id == $process_id) ? 'in' : ''}}" id="collapse{{$process->id}}">
-                      @foreach($process->equipment()->get() as $equipment)
-                        @if (count($equipment->unscheduledTasks()) > 0)
-                        <li class="list-group-item"><img src="{{asset('/img/equipment.png')}}" style="padding-right: 10px;"/><a data-toggle="collapse" href="#collapse{{$process->id}}{{$equipment->id}}" style="font-size: 19px;">{{$equipment->name}}<span class="badge pull-right">{{count($equipment->unscheduledTasks())}}</span></a>
-                          <ul class="list-group collapse in" id="collapse{{$process->id}}{{$equipment->id}}">
-                              @foreach($equipment->unscheduledTasks() as $task)
-                                <li style="padding-left:0px;" class="list-group-item {{($process->id == $process_id) ? 'task' : ''}}" data-userid="{{$task->getCalendarUserId()}}" data-duration="{{$task->duration}}" data-hasnote="{{($task->notes == "") ? false : true}}" data-colour="{{User::find($task->project()->first()->user_id)->colour}}" data-title="{{$task->project()->first()->description}}" data-description="{{$task->project()->first()->docket}}<br />{{$task->project()->first()->customer()->first()->name}}<br />{{$task->notes}}<br />{{strtoupper($task->status)}}" data-id="{{$task->id}}"><img src="{{asset('/img/task.png')}}" style="padding-right: 10px;" />
-                                    {{Project::find($task->project_id)->description}} - {{Project::find($task->project_id)->docket}} - {{Customer::find(Project::find($task->project_id)->customer_id)->name}}
-                                </li>
-                              @endforeach
-                          </ul>
-                        </li>
-                        @endif
-                      @endforeach 
-                    </ul>
-                  </li>
-                  @endif
-                  @endforeach
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="col-md-3 all-tasks">
+
   </div>
   <div class="col-md-9">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
     <ul class="nav nav-tabs" role="tablist">
       @foreach ($processes as $index => $process)
           <li {{ (Request::is('process/'.$process->name) ? 'class="active"' : '') }}><a href="{{action('HomeController@scheduleProcess', array('process_name' => $process->name))}}">{{$process->name}}</a></li>
       @endforeach
     </ul>
     </div>
-    <div class="col-md-3 text-right">
+    <div class="col-md-9 text-right" style="padding-right: 5px;">        
+      <button type="button" class="btn btn-default refresh"><span class="glyphicon glyphicon-refresh" style="margin-right:0px;"></span></button>
       <div class="btn-group">
         <button type="button" class="btn btn-default prev-day"><span class="glyphicon glyphicon-chevron-left" style="margin-right:0px;"></span></button>
-        <button type="button" class="btn btn-default today">Today</button>
+        <button type="button" class="btn btn-default today">Today (Now)</button>
         <button type="button" class="btn btn-default next-day"><span class="glyphicon glyphicon-chevron-right" style="margin-right:0px;"></span></button>
       </div>
     </div>
@@ -143,10 +105,27 @@
           });
           $('.today').click(function(){
             $calendar.weekCalendar("today");
+            $calendar.weekCalendar("now");
           });
-          setup_tasks();
+          $('.refresh').click(function(){
+            $calendar.weekCalendar("refresh");
+          });
+          populate_tasks();
         }
       });
+  }
+
+  function populate_tasks(){
+    $.ajax({
+      url: "{{action('TaskController@allTasks', $process_id)}}",
+      type: 'GET',
+      dataType: 'text',
+      success: function(data) {
+        $(".all-tasks").html(data);
+        setup_tasks();
+        $calendar.weekCalendar("refresh");
+      }
+    });
   }
 
   function load_task(id, title) {
@@ -197,9 +176,10 @@
         $(this).parent().parent().find('a .badge').text(equipBadge);
         $(this).parent().parent().parent().parent().find('a:first .badge').text(processBadge);
         if (processBadge == 0){
-          console.log($(this).parent().parent().parent().parent().remove());
+          $(this).parent().parent().parent().parent().remove();
         }
         $(this).remove();
+        populate_tasks();
         $calendar.weekCalendar("refresh");
       },
       drag: function(event, ui){
@@ -214,7 +194,8 @@
           url: root+'/task/reschedule/'+$(this).data('id'),
           type: 'GET',
           success: function(data) {
-            window.location.href = "{{action('ProjectController@editor')}}";
+            $calendar.weekCalendar("refresh");
+            populate_tasks();
           }
       });
     });

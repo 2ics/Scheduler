@@ -26,4 +26,16 @@ class Task extends Eloquent {
             }
         }
     }
+
+    static public function getAllUnscheduled()
+    {
+        $numTasks = 0;
+        foreach (Process::all() as $process){
+            if ($process->getNumTasks() > 0){
+                $numTasks += $process->getNumTasks();
+            }
+        }
+
+        return $numTasks;
+    }
 }

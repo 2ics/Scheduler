@@ -22,7 +22,7 @@
 		            <th>Input Date</th>
 		            <th>Due Date</th>
 		            <th>Completion Time</th>
-		            <th>Overdue</th>
+		            <th>Days Left</th>
 		            <th>Scheduled?</th>
 		            <th>Total tasks</th>
                 <th>Status</th>

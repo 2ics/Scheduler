@@ -56,6 +56,16 @@ class TaskController extends \BaseController {
 	{
 		return View::make('task')->with('task', Task::find($id))->with('project', Project::find(Task::find($id)->project_id));
 	}
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function allTasks($process_id)
+	{
+		$process = Process::find($process_id);
+		return View::make('alltasks')->with('process_id', $process->id)->with('processes', Process::all())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
+	}
 
 	/**
 	 * Display a listing of the resource.

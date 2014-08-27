@@ -91,7 +91,7 @@
 						<div class="col-md-12">
 							<div class="tasks">
 							@foreach($project->tasks()->get() as $task)
-								<div class="panel panel-warning">
+								<div class="panel panel-warning" data-task="{{$task->id}}">
 									<div class="panel-heading">
 										<h4 class="panel-title pull-left">
 											<a data-toggle="collapse" href="#collapseTask{{$task->id}}">{{Process::find($task->process_id)->name}} ({{ProcessEquipment::find($task->equipment_id)->name}}) - {{$task->duration}} hours - {{ucfirst($task->status)}}</a>
@@ -232,6 +232,9 @@ $(document).ready(function(){
 	    	formData.tasks = {};
 	    	$.each($(".tasks").find(".panel"), function(index, element){
 	    		formData['tasks'][index] = {};
+	    		if ($(element).data('task') != undefined){
+		    		formData['tasks'][index]['id'] = $(element).data('task');
+		    	}
 	    		formData['tasks'][index]['process_id'] = $(element).find(".process").val();
 	    		formData['tasks'][index]['equipment_id'] = $(element).find(".equipment").val();
 	    		formData['tasks'][index]['duration'] = $(element).find(".duration").val();

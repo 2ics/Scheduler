@@ -16,6 +16,7 @@
 		@section('styles')
 			body {
 				padding-top: 60px;
+				padding-bottom: 60px;
 			}
 		@show
 		</style>
@@ -29,8 +30,6 @@
 	</head>
 
 	<body>
-		
-
 		<!-- Navbar -->
 		<div class="navbar navbar-inverse navbar-fixed-top">
 	      <div class="container">
@@ -49,7 +48,11 @@
 
 				<li {{ (Request::is('project/editor') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@editor') }}">{{trans('pages.edit')}}</a></li>
 				
-				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@scheduler') }}">{{trans('pages.scheduler')}}</a></li>
+				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@scheduler') }}">{{trans('pages.scheduler')}}
+				@if (Task::getAllUnscheduled() > 0)
+				<span style="margin-left:5px;" class="badge pull-right">{{Task::getAllUnscheduled()}}</span>
+				@endif
+				</a></li>
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">
 				

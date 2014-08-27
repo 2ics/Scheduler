@@ -354,6 +354,15 @@
       },
 
       /*
+       * Go to this week
+       */
+      now: function() {
+        var d = new Date();
+        var n = d.getHours();
+        this._scrollToHour(n, false);
+      },
+
+      /*
        * Go to the previous week relative to the currently displayed week
        */
       prevWeek: function() {
@@ -1562,7 +1571,9 @@
             var $calEvent = $(eventHtml);
             $calEvent.append(lockBtn);
             $calEvent.append(viewBtn);
-            $calEvent.append(noteBtn);
+            if(calEvent.hasnote){
+              $calEvent.append(noteBtn);
+            }
             $modifiedEvent = options.eventRender(calEvent, $calEvent);
             $calEvent = $modifiedEvent ? $modifiedEvent.appendTo($(this)) : $calEvent.appendTo($(this));
             $calEvent.css({lineHeight: (options.textSize + 2) + 'px', fontSize: options.textSize + 'px'});
@@ -1594,8 +1605,8 @@
                         .attr("type", "button")
                         .data('id', calEvent.id)
                         .addClass("btn btn-link btn-sm reschedule-btn")
-                        .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
-            var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-share-alt").css('color', '#000000').css('margin', '0px');
+                        .css('padding', '0px').css('position', 'absolute').css('right', '2px').css('bottom', '0px');
+            var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-arrow-left").css('color', '#000000').css('margin', '0px');
             rescheduleBtn.append(rescheduleIcon);
             var editBtn = $('<button/>')
                         .attr("type", "button")
