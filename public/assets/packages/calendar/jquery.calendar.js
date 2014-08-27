@@ -1550,7 +1550,7 @@
                       .attr("type", "button")
                       .data('id', calEvent.id)
                       .addClass("btn btn-link btn-sm view-btn")
-                      .css('padding', '0px').css('position', 'absolute').css('left', '5px').css('bottom', '0px');
+                      .css('padding', '0px').css('position', 'absolute').zIndex(1000).css('left', '5px').css('bottom', '0px');
           var viewIcon = $('<span/>').addClass("glyphicon glyphicon-eye-open").css('color', '#000000').css('margin', '0px');
           viewBtn.append(viewIcon);
           
@@ -1558,7 +1558,7 @@
                       .attr("type", "button")
                       .data('id', calEvent.id)
                       .addClass("btn btn-link btn-sm")
-                      .css('padding', '0px').css('position', 'absolute').css('left', '25px').css('bottom', '0px');
+                      .css('padding', '0px').css('position', 'absolute').css('left', '5px').css('bottom', '12px');
           var noteIcon = $('<span/>').addClass("glyphicon glyphicon-comment").css('color', '#000000').css('margin', '0px');
           noteBtn.append(noteIcon);
 

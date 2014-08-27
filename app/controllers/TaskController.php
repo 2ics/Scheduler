@@ -52,6 +52,19 @@ class TaskController extends \BaseController {
 	 *
 	 * @return Response
 	 */
+	public function changeStatus()
+	{
+		$data = Input::all();
+
+		$task = Task::find($data['id']);
+		$task->status = $data['status'];
+		$task->save();
+	}
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
 	public function individual($id)
 	{
 		return View::make('task')->with('task', Task::find($id))->with('project', Project::find(Task::find($id)->project_id));

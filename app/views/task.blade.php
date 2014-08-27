@@ -50,14 +50,35 @@
     </tr>
     @if ($task->notes != "")
     <tr>
-      <td><b>Stock:</b></td>
+      <td><b>Notes:</b></td>
       <td>{{$task->notes}}</td>
     </tr>
     @endif
     <tr>
       <td><b>Status:</b></td>
-      <td>{{strtoupper($task->status)}}</td>
+      <td>
+        <select class="form-control status" id="status" placeholder="Select Status">
+          <option value="pending" {{($task->status == "pending") ? "selected" : ""}}>Pending</option>
+          <option value="approved" {{($task->status == "approved") ? "selected" : ""}}>Approved</option>
+          <option value="in-progress" {{($task->status == "in-progress") ? "selected" : ""}}>In Progress</option>
+          <option value="complete" {{($task->status == "complete") ? "selected" : ""}}>Complete</option>
+        </select>
+      </td>
     </tr>
   </table>
   </div>
 </div>
+
+<script>
+$(".status").change(function(){
+  var self = $(this);
+  $.ajax({
+      url: "{{action('TaskController@changeStatus')}}",
+      type: 'POST',
+      data: {'id': "{{$task->id}}", "status": self.val()},
+      success: function(data) {
+        $calendar.weekCalendar('refresh');
+      }
+  });
+});
+</script>

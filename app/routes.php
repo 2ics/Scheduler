@@ -80,6 +80,7 @@ Route::get('project/schedule/{project_id}', 'ProjectController@schedule');
 Route::get('task/reschedule/{task_id}', 'TaskController@reschedule');
 Route::get('task/individual/{task_id}', 'TaskController@individual');
 Route::get('task/list/{process_id}', 'TaskController@allTasks');
+Route::post('task/status', 'TaskController@changeStatus');
 
 Route::get('api/customers/all', 'CustomerController@allCustomers');
 Route::get('api/select/processes/all', 'TaskController@allProcessesSelect');
