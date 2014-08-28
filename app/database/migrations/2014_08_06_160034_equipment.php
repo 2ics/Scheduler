@@ -18,6 +18,7 @@ class Equipment extends Migration {
 			$table->integer('process_id')->unsigned()->index();
 			$table->foreign('process_id')->references('id')->on('processes')->onDelete('cascade');
 			$table->string('name')->nullable();
+			$table->string('order')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 

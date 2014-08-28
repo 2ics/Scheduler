@@ -15,30 +15,4 @@ class CustomerController extends BaseController {
 	|
 	*/
 
-	public function allCustomers()
-	{
-		$customers = Customer::all();
-		$all_customers = array();
-		foreach ($customers as $customer){
-			$temp_customer['value'] = $customer->id;
-			$temp_customer['text'] = $customer->name;
-			$all_customers[] = $temp_customer;
-		}
-
-		return $all_customers;
-	}
-
-    public function allUsers()
-    {
-        $users = User::all();
-        $all_users = array();
-        foreach ($users as $user){
-            $temp_user['value'] = $user->id;
-            $temp_user['text'] = $user->name;
-            $all_users[] = $temp_user;
-        }
-
-        return $all_users;
-    }
-
 }

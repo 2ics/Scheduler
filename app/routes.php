@@ -62,9 +62,7 @@ Route::post('api/tasks/save/event', 'TaskController@saveEvent');
 Route::post('api/tasks/editcolumn', 'TaskController@editColumn');
 Route::post('api/tasks/{process_id}/bydate', 'TaskController@processByDate');
 Route::get('api/tasks/getbydate/{start}/{end}', 'TaskController@getByDate');
-Route::get('api/tasks/unscheduledtasks', 'TaskController@getUnscheduledTasks');
 Route::get('api/tasks/process/{id}/equipment', 'TaskController@getProcessEquipment');
-Route::get('api/tasks/process/equipment/order/{id}', 'TaskController@getEquipmentOrderId');
 Route::get('api/tasks/process/all', 'TaskController@allProcesses');
 
 
@@ -82,11 +80,8 @@ Route::get('task/individual/{task_id}', 'TaskController@individual');
 Route::get('task/list/{process_id}', 'TaskController@allTasks');
 Route::post('task/status', 'TaskController@changeStatus');
 
-Route::get('api/customers/all', 'CustomerController@allCustomers');
-Route::get('api/select/processes/all', 'TaskController@allProcessesSelect');
-Route::get('api/select/{process_id}/equipments', 'TaskController@allEquipmentByProcessSelect');
-Route::get('api/select/process/equipment', 'TaskController@allEquipmentProcessSelect');
-Route::get('api/users/all', 'UserController@allUsers');
+Route::get('admin/processes', 'AdminController@processes');
+Route::post('admin/processes/save', 'AdminController@saveProcesses');
 // App::missing(function($exception)
 // {
 //     App::abort(404, 'Page not found');

@@ -49,9 +49,7 @@
 				<li {{ (Request::is('project/editor') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@editor') }}">{{trans('pages.edit')}}</a></li>
 				
 				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@scheduler') }}">{{trans('pages.scheduler')}}
-				@if (Task::getAllUnscheduled() > 0)
-				<span style="margin-left:5px;" class="badge pull-right">{{Task::getAllUnscheduled()}}</span>
-				@endif
+				<span style="margin-left:5px;{{Task::getAllUnscheduled() == 0 ? 'display:none;' : ''}}"  class="badge pull-right master-tasks">{{Task::getAllUnscheduled()}}</span>
 				</a></li>
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">

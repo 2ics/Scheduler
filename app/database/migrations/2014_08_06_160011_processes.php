@@ -16,6 +16,7 @@ class Processes extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name')->nullable();
+			$table->string('order')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 

@@ -180,6 +180,10 @@
         }
         $(this).remove();
         populate_tasks();
+        $(".master-tasks").text(parseFloat($(".master-tasks").text()) - 1);
+        if ($(".master-tasks").text() == 0){
+          $(".master-tasks").hide();
+        }
         $calendar.weekCalendar("refresh");
       },
       drag: function(event, ui){
@@ -196,6 +200,10 @@
           success: function(data) {
             $calendar.weekCalendar("refresh");
             populate_tasks();
+            $(".master-tasks").text(parseFloat($(".master-tasks").text()) + 1);
+            if ($(".master-tasks").text() > 0){
+              $(".master-tasks").show();
+            }
           }
       });
     });

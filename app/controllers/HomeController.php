@@ -36,7 +36,7 @@ class HomeController extends BaseController {
 		Assets::add('scheduler'); 
 
 		$process = Process::where('name', '=', $process_name)->first();
-		return View::make('process_schedule')->with('process_id', $process->id)->with('processes', Process::all())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
+		return View::make('process_schedule')->with('process_id', $process->id)->with('processes', Process::orderBy('order', 'ASC')->get())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
 	}
 
 }

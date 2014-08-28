@@ -19,7 +19,7 @@ class ProjectController extends BaseController {
 	public function create()
 	{
 		$date = date("d-m-Y", time());
-		return View::make('project.create')->with('processes', Process::all())->with('customers', Customer::all())->with('users', User::all())->with('date', $date);
+		return View::make('project.create')->with('processes', Process::orderBy('order', 'asc')->get())->with('customers', Customer::all())->with('users', User::all())->with('date', $date);
 	}
 
 	public function edit($id)
@@ -38,7 +38,7 @@ class ProjectController extends BaseController {
 		Assets::add('scheduler'); 
 
 		$process = Process::first();
-		return View::make('process_schedule')->with('process_id', $process->id)->with('processes', Process::all())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
+		return Redirect::action('HomeController@scheduleProcess', $process->name);
 	}
 
 	public function getAll(){
@@ -81,8 +81,8 @@ class ProjectController extends BaseController {
 	public function getEquipment()
 	{
 		$equipmentArray = array();
-		foreach (Process::all() as $process){
-			foreach($process->equipment()->get() as $equipment){
+		foreach (Process::orderBy('order', 'asc')->get() as $process){
+			foreach($process->equipment()->orderBy('order', 'asc')->get() as $equipment){
 				$equipmentArray[$process->id][] = $equipment['attributes'];
 			}
 		}
@@ -125,6 +125,10 @@ class ProjectController extends BaseController {
 				foreach($task as $field => $value){
            			if(Schema::hasColumn('tasks', $field)){
            				if ($field == "duration" && $newTask->duration != $value){
+           					$newTask->start_date = null;
+           					$newTask->end_date = null;
+           				}
+           				if ($field == "equipment_id" && $newTask->equipment_id != $value){
            					$newTask->start_date = null;
            					$newTask->end_date = null;
            				}

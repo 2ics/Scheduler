@@ -18,7 +18,7 @@ class Task extends Eloquent {
 
     public function getCalendarUserId()
     {
-        $all_equipment = Process::find(ProcessEquipment::where('id', '=', $this->equipment_id)->first()->process_id)->equipment()->get();
+        $all_equipment = Process::find(ProcessEquipment::where('id', '=', $this->equipment_id)->first()->process_id)->equipment()->orderBy('order', 'asc')->get();
 
         foreach ($all_equipment as $index => $equipment) {
             if ($equipment->id == $this->equipment_id){

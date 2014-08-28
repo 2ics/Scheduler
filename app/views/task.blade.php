@@ -38,7 +38,7 @@
   <table class="indv-task">
     <tr>
       <td><b>Process:</b></td>
-      <td>{{Process::find($task->process_id)->name}}</td>
+      <td>{{Process::find(ProcessEquipment::find($task->equipment_id)->process_id)->name}}</td>
     </tr>
     <tr>
       <td><b>Equipment:</b></td>

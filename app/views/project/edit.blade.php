@@ -98,7 +98,7 @@
 											@if ($task->start_date != null && $task->end_date != null)
 											<img src="{{asset('/img/ON_schedule.png')}}" width="18" />
 											@endif
-											{{Process::find($task->process_id)->name}} ({{ProcessEquipment::find($task->equipment_id)->name}}) - {{$task->duration}} hours - {{ucfirst($task->status)}}<br />
+											{{Process::find(ProcessEquipment::find($task->equipment_id)->process_id)->name}} ({{ProcessEquipment::find($task->equipment_id)->name}}) - {{$task->duration}} hours - {{ucfirst($task->status)}}<br />
 											</a>
 										</h4>
 										<div class="col-md-2 pull-right text-right" style="padding: 0px;">
@@ -115,13 +115,13 @@
 										@endif
 										<div class="clearfix"></div>
 									</div>
-									<div id="collapseTask{{$task->id}}" class="panel-collapse collapse in">
+									<div id="collapseTask{{$task->id}}" class="panel-collapse collapse">
 										<div class="panel-body">
 											<div class="form-group">
 												<label for="process">Process</label>
 												<select class="form-control process" id="process" placeholder="Select Process">
 												@foreach($processes as $process)
-													@if ($process->id == $task->process_id)
+													@if ($process->id == ProcessEquipment::find($task->equipment_id)->process_id)
 													<option value="{{$process->id}}" selected>{{$process->name}}</option>
 													@else
 													<option value="{{$process->id}}">{{$process->name}}</option>
@@ -132,7 +132,7 @@
 											<div class="form-group">
 												<label for="equipment">Equipment</label>
 												<select class="form-control equipment" id="equipment" placeholder="Select Equipment">
-													@foreach(Process::find($task->process_id)->equipment()->get() as $equipment)
+													@foreach(Process::find(ProcessEquipment::find($task->equipment_id)->process_id)->equipment()->get() as $equipment)
 														@if ($equipment->id == $task->equipment_id)
 														<option value="{{$equipment->id}}" selected>{{$equipment->name}}</option>
 														@else
@@ -247,7 +247,6 @@ $(document).ready(function(){
 	    		if ($(element).data('task') != undefined){
 		    		formData['tasks'][index]['id'] = $(element).data('task');
 		    	}
-	    		formData['tasks'][index]['process_id'] = $(element).find(".process").val();
 	    		formData['tasks'][index]['equipment_id'] = $(element).find(".equipment").val();
 	    		formData['tasks'][index]['duration'] = $(element).find(".duration").val();
 	    		formData['tasks'][index]['status'] = $(element).find(".status").val();
