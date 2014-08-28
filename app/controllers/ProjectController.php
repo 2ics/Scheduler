@@ -100,7 +100,7 @@ class ProjectController extends BaseController {
 				$project = new Project;
 			}
 			if (isset($data['add_to_schedule'])){
-				if ($data['add_to_schedule']){
+				if ($data['add_to_schedule'] == "true"){
 					$project->sent_to_schedule = true;
 				}else{
 					$project->sent_to_schedule = false;

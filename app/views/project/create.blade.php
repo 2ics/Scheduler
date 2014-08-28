@@ -151,6 +151,9 @@ $(document).ready(function(){
       	updateEquipmentHandler();
       }
 	});
+	$(".equipment, .duration, .status").change(function(){
+		updateTaskName($(this).closest(".panel"));
+	});
 });
 
 $("#addTask").click(function(){
@@ -158,10 +161,6 @@ $("#addTask").click(function(){
 	num_tasks++;
 	updateEquipmentHandler();
 	$('#projectForm').bootstrapValidator('addField', $("input[name='duration[]']"));
-});
-
-$(".equipment, .duration, .status").change(function(){
-	updateTaskName($(this).closest(".panel"));
 });
 
 function updateTaskName(panel){
@@ -211,7 +210,7 @@ function createProject(schedule){
 	        type: 'POST',
 	        data: formData,
 	        success: function(data) {
-	        	console.log(data);
+	        	window.location.href = "{{action('ProjectController@editor')}}";
 	        }
 	    });
 	}
