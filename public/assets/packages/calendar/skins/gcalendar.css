@@ -17,7 +17,7 @@
 .wc-day-column-first,
 .wc-day-column-last,
 .wc-day-column-middle,
-.wc-time-slot{border-color: #ccc;}
+.wc-time-slot{border-color: #A5A6A8;}
 .wc-header .wc-day-column-header.wc-today{background-color: #E2E5E9;border-color: #E2E5E9;}
 .wc-header .wc-today.wc-user-header{font-weight:normal;color: #000000;}
 .wc-today.wc-day-column-last{border-right: 3px double #E2E5E9;}

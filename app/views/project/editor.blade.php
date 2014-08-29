@@ -27,7 +27,9 @@
 		            <th>Total tasks</th>
                 <th>Status</th>
                 <th>Notes</th>
+                @if (Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin')))
                 <th>Modify</th>
+                @endif
 		        </tr>
 		    </thead>
 		</table>
@@ -110,7 +112,7 @@
           { "data": "total_tasks", },
           { "data": "status", },
           { "data": "notes", },
-          { "data": "modify", "width": '60px'}
+          { "data": "modify", "width": '60px', 'visible': "{{(Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin'))) ? true : false}}" }
       ],
       "tableTools": {
           "sSwfPath": "{{ asset('packages/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf') }}",

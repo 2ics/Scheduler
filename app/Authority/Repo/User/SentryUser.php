@@ -80,21 +80,10 @@ class SentryUser extends RepoAbstract implements UserInterface {
 
 		    // Only Admins should be able to change group memberships. 
 		    $operator = $this->sentry->getUser();
-		    if ($operator->hasAccess('admin'))
+		    if ($operator->hasAccess('Super Admin') || $operator->hasAccess('Admin'))
 		    {
-			    // Update group memberships
-			    $allGroups = $this->sentry->getGroupProvider()->findAll();
-			    foreach ($allGroups as $group)
-			    {
-			    	if (isset($data['groups'][$group->id])) 
-	                {
-	                    //The user should be added to this group
-	                    $user->addGroup($group);
-	                } else {
-	                    // The user should be removed from this group
-	                    $user->removeGroup($group);
-	                }
-			    }
+		    	$user->groups()->detach();
+			    $user->groups()->attach(e($data['group']));
 			}
 
 		    // Update the user

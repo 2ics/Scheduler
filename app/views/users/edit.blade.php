@@ -147,15 +147,18 @@ Edit Profile
 
 
 
-        @if (Sentry::getUser()->hasAccess('admin'))
+        @if (Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin')))
         <div class="form-group">
             {{ Form::label('edit_memberships', trans('users.group_membership'), array('class' => 'col-sm-2 control-label'))}}
             <div class="col-sm-10">
                 @foreach ($allGroups as $group)
-                    <label class="checkbox-inline">
-                        <input type="checkbox" name="groups[{{ $group->id }}]" value='1' 
-                        {{ (in_array($group->name, $userGroups) ? 'checked="checked"' : '') }} > {{ $group->name }}
+                    @if ($group->name == "Super Admin" && !Sentry::getUser()->hasAccess('Super Admin'))
+
+                    @else
+                    <label class="radio-inline">
+                      <input type="radio" name="group" {{(Sentry::getUser()->groups()->first()->id == $group->id) ? "checked" : ""}} value="{{$group->id}}">{{$group->name}}
                     </label>
+                    @endif
                 @endforeach
             </div>
         </div>

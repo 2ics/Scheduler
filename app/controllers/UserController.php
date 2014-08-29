@@ -19,6 +19,22 @@ class UserController extends BaseController {
 	protected $forgotPasswordForm;
 	protected $changePasswordForm;
 	protected $suspendUserForm;
+    protected $access = array(
+        'index'          => null,
+        'create'         => null,
+        'store'          => null,
+        'show'           => null,
+        'edit'           => array('Super Admin', 'Admin', 'Me'),
+        'update'         => array('Super Admin', 'Admin', 'Me'),
+        'destroy'        => array('Super Admin', 'Admin'),
+        'change'         => array('Super Admin', 'Admin', 'Me'),
+        'changepassword' => array('Super Admin', 'Admin', 'Me'),
+        'manage'         => array('Super Admin', 'Admin'),
+        'suspend'        => array('Super Admin', 'Admin'),
+        'unsuspend'      => array('Super Admin', 'Admin'),
+        'ban'            => array('Super Admin', 'Admin'),
+        'unban'          => array('Super Admin', 'Admin')
+    );
 
 	/**
 	 * Instantiate a new UserController
@@ -42,13 +58,9 @@ class UserController extends BaseController {
 		$this->changePasswordForm = $changePasswordForm;
 		$this->suspendUserForm = $suspendUserForm;
 
-		//Check CSRF token on POST
-		$this->beforeFilter('csrf', array('on' => 'post'));
+        $this->beforeFilter('csrf', array('on' => 'post'));
 
-		// Set up Auth Filters
-		$this->beforeFilter('auth', array('only' => array('change')));
-		$this->beforeFilter('inGroup:Admins', array('only' => array('show', 'index', 'destroy', 'suspend', 'unsuspend', 'ban', 'unban', 'edit', 'update')));
-		//array('except' => array('create', 'store', 'activate', 'resend', 'forgot', 'reset')));
+        parent::checkPermissions($this->access);
 	}
 
 

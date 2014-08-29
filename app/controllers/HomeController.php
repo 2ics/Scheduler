@@ -14,15 +14,29 @@ class HomeController extends BaseController {
 	|	Route::get('/', 'HomeController@showWelcome');
 	|
 	*/
+    protected $access = array(
+        'home'    	 		 => null,
+        'scheduler'   		 => null,
+        'scheduleProcess'    => null
+    );
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // Establish Filters
+        $this->beforeFilter('auth');
+        parent::checkPermissions($this->access);
+    }
 
-	public function showWelcome()
+	public function home()
 	{
-		return View::make('hello');
-	}
-
-	public function planner()
-	{
-		return View::make('planner')->with(array('customers' => Customer::all()))->with(array('users' => User::all()));
+		Session::reflash();
+		if (Sentry::check()){
+			return Redirect::action('ProjectController@scheduler');
+		}else{
+			return Redirect::action('SessionController@create');
+		}
 	}
 
 	public function scheduler()

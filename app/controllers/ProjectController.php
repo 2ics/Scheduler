@@ -15,11 +15,39 @@ class ProjectController extends BaseController {
 	|	Route::get('/', 'HomeController@showWelcome');
 	|
 	*/
+    protected $access = array(
+        'create'    	 => array('Super Admin', 'Admin'),
+        'edit'   		 => array('Super Admin', 'Admin'),
+        'editor'         => null,
+        'scheduler'		 => null,
+        'getAll'		 => null,
+        'getEquipment'   => null,
+        'save'			 => array('Super Admin', 'Admin'),
+        'delete'		 => array('Super Admin', 'Admin'),
+        'schedule' 		 => array('Super Admin', 'Admin')
+    );
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // Establish Filters
+        $this->beforeFilter('auth');
+        parent::checkPermissions($this->access);
+    }
 
 	public function create()
 	{
 		$date = date("d-m-Y", time());
-		return View::make('project.create')->with('processes', Process::orderBy('order', 'asc')->get())->with('customers', Customer::all())->with('users', User::all())->with('date', $date);
+		$allUsers = array();
+
+		foreach (User::all() as $user){
+			$groups = $user->groups()->where('id', '=', '1')->get();
+			if (count($groups) == 0){
+				$allUsers[] = $user;
+			}
+		}
+		return View::make('project.create')->with('processes', Process::orderBy('order', 'asc')->get())->with('customers', Customer::all())->with('users', $allUsers)->with('date', $date);
 	}
 
 	public function edit($id)
@@ -37,7 +65,8 @@ class ProjectController extends BaseController {
 	{
 		Assets::add('scheduler'); 
 
-		$process = Process::first();
+		$process = Process::orderBy('order', 'asc')->first();
+		Session::reflash();
 		return Redirect::action('HomeController@scheduleProcess', $process->name);
 	}
 
@@ -56,6 +85,15 @@ class ProjectController extends BaseController {
         	}else{
         		$overdue = (floor($overdue/(60*60*24)) < 0) ? "<span style='color: #FF0000; font-weight:bold;'>".floor($overdue/(60*60*24))."</span>" : floor($overdue/(60*60*24));
         	}
+        	if ($project->sent_to_schedule == true){
+        		$schedule = "<img src='".asset('/img/ON_schedule.png')."' />";
+        	}else{
+        		if (Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin'))){
+        			$schedule = '<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#scheduleModal" data-project="'.$project->id.'"><img src="'.asset('/img/OFF_schedule.png').'" /></button>';
+        		}else{
+        			$schedule = '<img src="'.asset('/img/OFF_schedule.png').'" />';
+        		}
+        	}
 			$allProjects[] = array(
 				'description' => $project->description,
 				'docket'		=> $project->docket,
@@ -68,7 +106,7 @@ class ProjectController extends BaseController {
 				'due_date'		=> $project->due_date,
 				'completion_time' => floor($completiontime/(60*60*24))+1 ." days",
 				'overdue'		=> $overdue,
-				'scheduled'		=> ($project->sent_to_schedule) ? "<img src='".asset('/img/ON_schedule.png')."' />" : '<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#scheduleModal"data-project="'.$project->id.'"> <img src="'.asset('/img/OFF_schedule.png').'" /></button>',
+				'scheduled'		=> $schedule,
 				'total_tasks'	=> count($project->tasks()->get()),
 				'status'		=> count($project->tasks()->where('status', '<>', 'complete')->get()) > 0 ? "In Progress" : "Completed",
 				'modify'		=> '<a href="'.action("ProjectController@edit", array($project->id)).'"><button type="button" class="btn btn-primary btn-sm" style="margin-right:5px;"><span class="glyphicon glyphicon-pencil"></span></button></a><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-project="'.$project->id.'" data-target="#myModal"><span class="glyphicon glyphicon-trash"></span></button>'

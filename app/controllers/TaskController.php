@@ -2,6 +2,26 @@
 
 class TaskController extends \BaseController {
 
+    protected $access = array(
+        'processByDate'  => null,
+        'allProcesses'	 => null,
+        'changeStatus'   => array('Super Admin', 'Admin'),
+        'individual'     => null,
+        'allTasks'		 => null,
+        'saveEvent'      => array('Super Admin', 'Admin'),
+        'getProcessEquipment'	=> null,
+        'reschedule'		    => array('Super Admin', 'Admin'),
+        'getEquipmentOrderId' 	=> null
+    );
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // Establish Filters
+        $this->beforeFilter('auth');
+        parent::checkPermissions($this->access);
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -22,6 +42,7 @@ class TaskController extends \BaseController {
 	        	if (ProcessEquipment::find($event->equipment_id)->process_id == $process_id){
 		        	$new_event = array();
 		        	$new_event['id'] = $event->id;
+		        	$new_event['admin'] = (Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin'))) ? 'true' : 'false';
 		        	$new_event['project_id'] = $event->project_id;
 		        	$new_event['start'] = $event->start_date;
 		        	$new_event['end'] = $event->end_date;
@@ -78,6 +99,16 @@ class TaskController extends \BaseController {
 	{
 		$process = Process::find($process_id);
 		return View::make('alltasks')->with('process_id', $process->id)->with('processes', Process::orderBy('order', 'ASC')->get())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
+	}
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function nonCompleteTasks($process_id)
+	{
+		$process = Process::find($process_id);
+		return View::make('non-complete-tasks')->with('process_id', $process->id)->with('processes', Process::orderBy('order', 'ASC')->get())->with('projects', Project::where('sent_to_schedule', '=', true)->get());
 	}
 	
 	/**

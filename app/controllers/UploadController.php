@@ -15,6 +15,20 @@ class UploadController extends BaseController {
 	|
 	*/
 
+    protected $access = array(
+        'customers'         => array('Super Admin'),
+        'uploadCustomers'   => array('Super Admin'),
+        'insertCustomers'   => array('Super Admin')
+    );
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // Establish Filters
+        $this->beforeFilter('auth');
+        parent::checkPermissions($this->access);
+    }
 
     /**
      * Display a listing of the resource.

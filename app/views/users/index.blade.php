@@ -31,16 +31,6 @@
 							
 						<td>
 							<button class="btn btn-default" type="button" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">{{trans('pages.actionedit')}}</button> 
-							@if ($user->status != 'Suspended')
-								<button class="btn btn-default" type="button" onClick="location.href='{{ route('suspendUserForm', array($user->id)) }}'">{{trans('pages.actionsuspend')}}</button> 
-							@else
-								<button class="btn btn-default" type="button" onClick="location.href='{{ action('UserController@unsuspend', array($user->id)) }}'">{{trans('pages.actionunsuspend')}}</button> 
-							@endif
-							@if ($user->status != 'Banned')
-								<button class="btn btn-default" type="button" onClick="location.href='{{ action('UserController@ban', array($user->id)) }}'">{{trans('pages.actionban')}}</button> 
-							@else
-								<button class="btn btn-default" type="button" onClick="location.href='{{ action('UserController@unban', array($user->id)) }}'">{{trans('pages.actionunban')}}</button> 
-							@endif
 							
 							<button class="btn btn-default action_confirm" href="{{ action('UserController@destroy', array($user->id)) }}" data-token="{{ Session::getToken() }}" data-method="delete">{{trans('pages.actiondelete')}}</button></td>
 					</tr>

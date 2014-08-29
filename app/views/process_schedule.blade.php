@@ -21,19 +21,27 @@
       @endforeach
     </ul>
     </div>
-    <div class="col-md-9 text-right" style="padding-right: 5px;">        
-      <button type="button" class="btn btn-default refresh"><span class="glyphicon glyphicon-refresh" style="margin-right:0px;"></span></button>
-      <div class="btn-group">
-        <button type="button" class="btn btn-default prev-day"><span class="glyphicon glyphicon-chevron-left" style="margin-right:0px;"></span></button>
-        <button type="button" class="btn btn-default today">Today (Now)</button>
-        <button type="button" class="btn btn-default next-day"><span class="glyphicon glyphicon-chevron-right" style="margin-right:0px;"></span></button>
+    <div class="col-md-12" style="padding-bottom: 15px;">
+      <div class="col-md-12">
+        <h5><b><a data-toggle="collapse" href="#non-complete-tasks">Upcoming Tasks</a></b></h5>
       </div>
+      <div class="col-md-12 non-complete-tasks in" id="non-complete-tasks" style="padding: 0px;max-height: 226px; overflow-y:scroll"></div>
+    </div>
+    <div class="col-md-3" style="padding-right: 0px;">
+      <div class="btn-group" style="width: 100%;">
+        <button type="button" class="btn btn-default prev-day" style="width: 20%"><span class="glyphicon glyphicon-chevron-left" style="margin-right:0px;"></span></button>
+        <button type="button" class="btn btn-default today" style="width: 60%">Today (Now)</button>
+        <button type="button" class="btn btn-default next-day" style="width: 20%"><span class="glyphicon glyphicon-chevron-right" style="margin-right:0px;"></span></button>
+      </div>
+    </div>
+    <div class="col-md-6 text-center" style="padding-left:4px;padding-right: 5px;">        
+      <button type="button" class="btn btn-default refresh" style="width: 100%;"><span class="glyphicon glyphicon-refresh" style="margin-right:0px;"></span></button>
     </div>
     <div class="col-md-3">
       <div class="row">
       <div class="col-md-12" style="padding-left:0px;">
         <div class="input-group">
-          <span class="input-group-addon"><span style="font-size: 14px;margin:0px;" class="glyphicon glyphicon-calendar"></span></span>
+          <span class="input-group-addon" style="background:#fff"><span style="font-size: 14px;margin:0px;" class="glyphicon glyphicon-calendar"></span></span>
           <input type="text" class="form-control" value="{{date('d/m/Y', time())}}" id="datepicker">
         </div>
       </div>
@@ -126,6 +134,25 @@
         $calendar.weekCalendar("refresh");
       }
     });
+    $.ajax({
+      url: "{{action('TaskController@nonCompleteTasks', $process_id)}}",
+      type: 'GET',
+      dataType: 'text',
+      success: function(data) {
+        $(".non-complete-tasks").html(data);
+        setup_nonCompleteTasks();
+        $calendar.weekCalendar("refresh");
+      }
+    });
+  }
+
+  function setup_nonCompleteTasks(){
+    $(".non-complete-tasks").find(".non-complete-task").each(function(){
+      $(this).click(function(){
+          $calendar.weekCalendar("gotoDate", $(this).data('date'));
+          $calendar.weekCalendar("gotoHour", $(this).data('hour'));
+      });
+    });
   }
 
   function load_task(id, title) {
@@ -152,9 +179,11 @@
 
   function setup_tasks() {
     $( ".task" ).each(function(){
-      $(this).data('calEvent', {userId: $(this).data('userid'), duration: $(this).data('duration'), hasnote: $(this).data('hasnote'), colour: $(this).data('colour'), title: $(this).data('title'), id: $(this).data('id'), description: $(this).data('description')});
+      $(this).data('calEvent', {userId: $(this).data('userid'), admin: $(this).data('admin'), duration: $(this).data('duration'), hasnote: $(this).data('hasnote'), colour: $(this).data('colour'), title: $(this).data('title'), id: $(this).data('id'), description: $(this).data('description')});
     });
+    @if (Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin')))
     create_draggable_items();
+    @endif
   }
 
   function create_draggable_items() {
@@ -184,6 +213,7 @@
         if ($(".master-tasks").text() == 0){
           $(".master-tasks").hide();
         }
+        populate_tasks();
         $calendar.weekCalendar("refresh");
       },
       drag: function(event, ui){

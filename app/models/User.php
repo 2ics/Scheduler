@@ -67,4 +67,9 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements UserInterfac
 	    return $this->remember_token;
 	}
 
+	public function groups()
+	{
+	    return $this->belongsToMany('Group', 'users_groups');
+	}
+
 }

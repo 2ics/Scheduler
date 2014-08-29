@@ -18,7 +18,7 @@
       		<div class="col-md-4">
       			<ul class="list-group processes">
       				@foreach(Process::orderBy('order', 'asc')->get() as $process)
-					<li class="list-group-item hasItems process" style="padding: 5px 15px;" data-id="{{$process->id}}"><span style="font-size: 14px;"><b>{{$process->name}}</b></span>
+					<li class="list-group-item hasItems process sorted-processes" style="padding: 5px 15px;" data-id="{{$process->id}}"><span style="font-size: 14px;"><b>{{$process->name}}</b></span>
 						<div class="btn-group pull-right" style="padding-right: 6px;">
 						  <button type="button" class="btn btn-default btn-sm edit"><span class="glyphicon glyphicon-pencil"></span></button>
 						  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-trash"></span></button>
@@ -158,7 +158,7 @@ $(".submit").click(function(){
 	var data = {};
 	var process_count = 0;
 	var equipment_count = 0;
-	$(".processes").find(".process").each(function(){
+	$(".sorted-processes").find(".process").each(function(){
 		var process = $($(this).find('span')[0]).text();
 		equipment_count = 0;
 		data[process] = {id: $(this).data('id'), order: process_count, name: process, equipment: {}};

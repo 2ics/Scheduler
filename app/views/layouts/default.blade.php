@@ -43,18 +43,25 @@
 	        <div class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
 				<li ><img src="{{asset('/img/zen_logo.png')}}" class="img-responsive" /></li>
-				@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))@endif
-				<li {{ (Request::is('project/create') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@create') }}">{{trans('pages.create')}}</a></li>
 
+				@if (Sentry::check() && (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin')))
+				<li {{ (Request::is('project/create') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@create') }}">{{trans('pages.create')}}</a></li>
+				@endif
 				<li {{ (Request::is('project/editor') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@editor') }}">{{trans('pages.edit')}}</a></li>
 				
-				<li {{ (Request::is('scheduler') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@scheduler') }}">{{trans('pages.scheduler')}}
+				<li {{ (Request::is('process/*') ? 'class="active"' : '') }}><a href="{{ action('ProjectController@scheduler') }}">{{trans('pages.scheduler')}}
 				<span style="margin-left:5px;{{Task::getAllUnscheduled() == 0 ? 'display:none;' : ''}}"  class="badge pull-right master-tasks">{{Task::getAllUnscheduled()}}</span>
 				</a></li>
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">
 				
 	            @if (Sentry::check())
+					@if (Sentry::getUser()->hasAccess('Super Admin'))
+						<li {{ (Request::is('admin/processes/') ? 'class="active"' : '') }}><a href="{{ action('AdminController@processes') }}">Modify Processes</a></li>
+					@endif
+					@if (Sentry::getUser()->hasAccess('Super Admin') || Sentry::getUser()->hasAccess('Admin'))
+						<li {{ (Request::is('users') ? 'class="active"' : '') }}><a href="{{ action('UserController@index') }}">Users</a></li>
+					@endif
 				<li {{ (Request::is('users/show/' . Session::get('userId')) ? 'class="active"' : '') }}><a href="{{ URL::to('users') }}/{{ Session::get('userId') }}">{{ Session::get('email') }}</a></li>
 				<li><a href="{{ URL::to('logout') }}">{{trans('pages.logout')}}</a></li>
 				@else

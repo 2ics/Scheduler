@@ -24,6 +24,7 @@ App::after(function($request, $response)
 
 App::missing(function($exception)
 {
+	Session::flash('error', "The page you are looking for is missing.");
     return Redirect::route('home');
 });
 

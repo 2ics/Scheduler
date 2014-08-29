@@ -38,4 +38,5 @@ class Task extends Eloquent {
 
         return $numTasks;
     }
+
 }

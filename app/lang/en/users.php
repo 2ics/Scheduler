@@ -78,4 +78,12 @@ return array(
 
 	'fax'			=>	"Fax",
 
+	'email'			=>	"Email",
+
+	'pword'			=>	"Password",
+
+	'remember'		=>	"Remember Me",
+
+	'forgot'		=>	"Forgot Password",
+
 );

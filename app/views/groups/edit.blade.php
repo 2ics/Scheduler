@@ -26,12 +26,11 @@
         ?>
         
         <div class="form-group">
+            @foreach(Sentry::findGroupById($group->id)->getPermissions() as $name => $permission)
             <label class="checkbox-inline">
-                {{ Form::checkbox('adminPermissions', 1, $permissions['admin'] ) }} Admin
+                {{ Form::checkbox('adminPermissions', 1, $permission ) }} {{$name}}
             </label>
-            <label class="checkbox-inline">
-                {{ Form::checkbox('userPermissions', 1, $permissions['users'] ) }} Users
-            </label>
+            @endforeach
         </div>
 
         {{ Form::hidden('id', $group->id) }}

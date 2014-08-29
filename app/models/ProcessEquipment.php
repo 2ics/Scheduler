@@ -30,4 +30,10 @@ class ProcessEquipment extends Eloquent {
 
     	return $allTasks;
     }
+    public function getAllScheduledNonComplete()
+    {
+        $tasks = Task::where('equipment_id', '=', $this->id)->whereNotNull('start_date')->whereNotNull('end_date')->where('status', '<>', 'complete')->orderBy('end_date', 'asc')->get();
+
+        return $tasks;
+    }
 }

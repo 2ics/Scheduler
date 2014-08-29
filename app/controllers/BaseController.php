@@ -19,6 +19,10 @@ class BaseController extends Controller {
     protected function checkPermissions($access, $userId = [])
     {
         $action = explode('@', Route::currentRouteAction())[1];
+        
+        if(Route::currentRouteAction() == "UserController@create"){
+            return;
+        }
         if (Sentry::check())
         {
             if (isset($this->access[$action]) && $this->access[$action] != null)

@@ -14,6 +14,19 @@ class AdminController extends BaseController {
 	|	Route::get('/', 'HomeController@showWelcome');
 	|
 	*/
+    protected $access = array(
+        'processes'		=> array('Super Admin'),
+        'saveProcesses' => array('Super Admin')
+    );
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // Establish Filters
+        $this->beforeFilter('auth');
+        parent::checkPermissions($this->access);
+    }
 
 	public function processes()
 	{
@@ -36,7 +49,7 @@ class AdminController extends BaseController {
 			}else{
 				$dbProcess = new Process;
 			}
-			$dbProcess->name = $index;
+			$dbProcess->name = str_replace("_", " ", $index);
 			$dbProcess->order = $process['order'];
 			$dbProcess->save();
 			if (isset($process['equipment'])){

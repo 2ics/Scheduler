@@ -398,6 +398,13 @@
           this._loadCalEvents(date);
       },
 
+      /*
+        * Reload the calendar to whatever week the date passed in falls on.
+        */
+      gotoHour: function(hour) {
+        this._scrollToHour(hour, false);
+      },
+
       /**
         * change the number of days to show
         */
@@ -1537,14 +1544,15 @@
 
           var lightColour = calEvent.colour;
           var darkColour = self.ColorLuminance("#"+lightColour, -0.4);
-
-          var lockBtn = $('<button/>')
-                      .attr("type", "button")
-                      .data('id', calEvent.id)
-                      .addClass("btn btn-link btn-sm lock-btn")
-                      .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
-          var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('color', '#000000').css('margin', '0px');
-          lockBtn.append(lockIcon);
+          if (calEvent.admin == "true"){
+            var lockBtn = $('<button/>')
+                        .attr("type", "button")
+                        .data('id', calEvent.id)
+                        .addClass("btn btn-link btn-sm lock-btn")
+                        .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
+            var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('color', '#000000').css('margin', '0px');
+            lockBtn.append(lockIcon);
+          }
           
           var viewBtn = $('<button/>')
                       .attr("type", "button")
@@ -1599,38 +1607,33 @@
           // }
           options.eventAfterRender(calEvent, $calEventList);
           eventIconHandler();
-          $(".lock-btn").click(function(){
-            self._addDraggableToCalEvent($(this).closest('.wc-cal-event').data('calEvent'), $(this).closest('.wc-cal-event'));
-            var rescheduleBtn = $('<button/>')
-                        .attr("type", "button")
-                        .data('id', calEvent.id)
-                        .addClass("btn btn-link btn-sm reschedule-btn")
-                        .css('padding', '0px').css('position', 'absolute').css('right', '2px').css('bottom', '0px');
-            var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-arrow-left").css('color', '#000000').css('margin', '0px');
-            rescheduleBtn.append(rescheduleIcon);
-            var editBtn = $('<button/>')
-                        .attr("type", "button")
-                        .data('id', calEvent.id)
-                        .data('project_id', calEvent.project_id)
-                        .addClass("btn btn-link btn-sm edit-btn")
-                        .css('padding', '0px').css('position', 'absolute').css('right', '20px').css('bottom', '0px');
-            var editIcon = $('<span/>').addClass("glyphicon glyphicon-pencil").css('color', '#000000').css('margin', '0px');
-            editBtn.append(editIcon);
-            $(this).closest('.wc-cal-event').append(rescheduleBtn);
-            $(this).closest('.wc-cal-event').append(editBtn);
-            rescheduleBtn.data('calEvent', calEvent);
-            editBtn.data('calEvent', calEvent);
-            $(this).unbind('click');
-            eventIconHandler();
-            $(this).remove();
-          });
-          var lockBtn = $('<button/>')
-                      .attr("type", "button")
-                      .data('id', calEvent.id)
-                      .addClass("btn btn-link btn-sm lock-btn")
-                      .css('padding', '0px').css('position', 'absolute').css('right', '0px').css('bottom', '0px');
-          var lockIcon = $('<span/>').addClass("glyphicon glyphicon-lock").css('margin', '0px');
-          lockBtn.append(lockIcon);
+          if (calEvent.admin == "true"){
+            $(".lock-btn").click(function(){
+              self._addDraggableToCalEvent($(this).closest('.wc-cal-event').data('calEvent'), $(this).closest('.wc-cal-event'));
+              var rescheduleBtn = $('<button/>')
+                          .attr("type", "button")
+                          .data('id', calEvent.id)
+                          .addClass("btn btn-link btn-sm reschedule-btn")
+                          .css('padding', '0px').css('position', 'absolute').css('right', '2px').css('bottom', '0px');
+              var rescheduleIcon = $('<span/>').addClass("glyphicon glyphicon-arrow-left").css('color', '#000000').css('margin', '0px');
+              rescheduleBtn.append(rescheduleIcon);
+              var editBtn = $('<button/>')
+                          .attr("type", "button")
+                          .data('id', calEvent.id)
+                          .data('project_id', calEvent.project_id)
+                          .addClass("btn btn-link btn-sm edit-btn")
+                          .css('padding', '0px').css('position', 'absolute').css('right', '20px').css('bottom', '0px');
+              var editIcon = $('<span/>').addClass("glyphicon glyphicon-pencil").css('color', '#000000').css('margin', '0px');
+              editBtn.append(editIcon);
+              $(this).closest('.wc-cal-event').append(rescheduleBtn);
+              $(this).closest('.wc-cal-event').append(editBtn);
+              rescheduleBtn.data('calEvent', calEvent);
+              editBtn.data('calEvent', calEvent);
+              $(this).unbind('click');
+              eventIconHandler();
+              $(this).remove();
+            });
+          }
           return $calEventList;
 
       },
@@ -1914,6 +1917,9 @@
           start: function(event, ui) {
             var $calEvent = ui.draggable || ui.helper;
             options.eventDrag(calEvent, $calEvent);
+          },
+          stop: function(){
+            populate_tasks();
           }
         });
       },

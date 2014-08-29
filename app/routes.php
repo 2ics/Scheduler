@@ -46,15 +46,11 @@ Route::resource('users', 'UserController');
 // Group Routes
 Route::resource('groups', 'GroupController');
 
-Route::get('/', array('as' => 'home', function()
-{
-	return View::make('home');
-}));
+Route::get('/', array('as' => 'home', 'uses' => 'HomeController@home'));
 
 Route::get('admin/upload/customers', 'UploadController@customers');
 Route::post('admin/upload/customers/submit', 'UploadController@uploadCustomers');
 
-Route::get('planner', 'HomeController@planner');
 Route::get('process/{name}', 'HomeController@scheduleProcess');
 Route::get('api/tasks/get', 'TaskController@getTasks');
 Route::post('api/tasks/add', 'TaskController@addTask');
@@ -78,6 +74,7 @@ Route::get('project/schedule/{project_id}', 'ProjectController@schedule');
 Route::get('task/reschedule/{task_id}', 'TaskController@reschedule');
 Route::get('task/individual/{task_id}', 'TaskController@individual');
 Route::get('task/list/{process_id}', 'TaskController@allTasks');
+Route::get('task/non-complete/{process_id}', 'TaskController@nonCompleteTasks');
 Route::post('task/status', 'TaskController@changeStatus');
 
 Route::get('admin/processes', 'AdminController@processes');
