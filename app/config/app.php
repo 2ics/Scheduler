@@ -1,7 +1,7 @@
 <?php
 if (isset($_SERVER['HTTP_HOST'])){
 	if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "localhost:8888"){
-		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/Scheduler/public";
+		$_SERVER['HTTP_HOST'] = "".$_SERVER['HTTP_HOST']."/ics-scheduler/public";
 	}else if(!strstr($_SERVER['HTTP_HOST'], "http://")){
 		$_SERVER['HTTP_HOST'] = "http://".$_SERVER['HTTP_HOST'];
 	}

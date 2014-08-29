@@ -1,17 +1,33 @@
 <?php
 
+/*
 if (!isset($_SERVER['DATABASE1_HOST'])){
 	$_SERVER['DATABASE1_HOST'] = "localhost";
 }
 if (!isset($_SERVER['DATABASE1_NAME'])){
-	$_SERVER['DATABASE1_NAME'] = "scheduler";
+	$_SERVER['DATABASE1_NAME'] = "a2icspsx_scheduler";
 }
 if (!isset($_SERVER['DATABASE1_USER'])){
-	$_SERVER['DATABASE1_USER'] = "root";
+	$_SERVER['DATABASE1_USER'] = "a2icspsx_sched";
 }
 if (!isset($_SERVER['DATABASE1_PASS'])){
-	$_SERVER['DATABASE1_PASS'] = "admin";
+	$_SERVER['DATABASE1_PASS'] = "A1d2m3i4n!";
 }
+*/
+if (!isset($_SERVER['DB1_HOST'])){
+	$_SERVER['DB1_HOST'] = "localhost";
+}
+if (!isset($_SERVER['DB1_NAME'])){
+	$_SERVER['DB1_NAME'] = "scheduler";
+}
+if (!isset($_SERVER['DB1_USER'])){
+	$_SERVER['DB1_USER'] = "root";
+}
+if (!isset($_SERVER['DB1_PASS'])){
+	$_SERVER['DB1_PASS'] = "admin";
+}
+
+
 
 return array(
 
@@ -67,10 +83,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => $_SERVER['DATABASE1_HOST'],
-			'database'  => $_SERVER['DATABASE1_NAME'],
-			'username'  => $_SERVER['DATABASE1_USER'],
-			'password'  => $_SERVER['DATABASE1_PASS'],
+			'host'      => $_SERVER['DB1_HOST'],
+			'database'  => $_SERVER['DB1_NAME'],
+			'username'  => $_SERVER['DB1_USER'],
+			'password'  => $_SERVER['DB1_PASS'],
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
